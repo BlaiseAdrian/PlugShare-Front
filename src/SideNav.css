@@ -1,0 +1,119 @@
+/* Sidebar styling */
+.sidenav {
+    height: 100vh;
+    background-color: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    transition: transform 0.3s ease;
+    overflow-x: hidden;
+}
+
+.side-nav-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 70vw;
+    background-color: #f8f9fa;
+    z-index: 1040; /* High z-index to overlay other content */
+    transition: transform 0.3s ease; /* Smooth slide-in effect */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 100; /* Just below the sidebar */
+}
+
+
+/* Sidebar content styling */
+.side-nav-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+/* Profile picture styling */
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+}
+
+/* Profile name styling */
+.profile-name {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Edit icon styling */
+.edit-icon {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Stars and Badges icons styling */
+.profile-section .fa-star,
+.profile-section .fa-award {
+    color: gold;
+    padding-left: 20px;
+}
+
+/* Divider line between profile and links sections */
+.section-divider {
+    border-top: 1px solid black;
+    margin: 0.5rem 0;
+}
+
+/* Alignment and spacing for items in profile section */
+
+.profile-section .me-3 {
+    margin-right: 0.75rem;
+}
+
+/* Navigation link styling */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.2s;
+    padding-left: 20px;
+    font-size: large;
+}
+
+/* Space between icons and text */
+.nav-link .me-3, .logout-section .me-2, .profile-section .me-3 {
+    margin-right: 0.5rem;
+}
+
+
+
+/* Active link styling */
+.nav-link.active {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+/* Hover effect for links */
+.nav-link:hover {
+    background-color: #e9ecef;
+}
+
+/* Logout section styling */
+.logout-section {
+    padding: 0.75rem 1rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid black;
+}
+
+
