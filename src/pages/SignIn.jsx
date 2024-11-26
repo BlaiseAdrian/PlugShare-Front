@@ -27,7 +27,7 @@ function Header(){
 
 function SignInForm(){
   return(
-    <Form className="px-2 px-md-5">
+    <Form className="px-3 px-md-5">
       <Form.Group className="mb-4" controlId="email">
         <Form.Label>Email address</Form.Label>
         <Form.Control type="email" placeholder="" />
