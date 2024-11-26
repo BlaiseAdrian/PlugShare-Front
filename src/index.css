@@ -45,4 +45,13 @@
   text-decoration: underline;
 }
 
+.form-control{
+  border-width: 2px;
 
+}
+.form-label{
+  font-weight: bold;
+}
+.form-control:focus{
+  box-shadow: none;
+}
