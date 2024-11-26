@@ -1,5 +1,6 @@
 import { Button, Form } from "react-bootstrap";
 import styles from "./page-signup.module.css"
+import { Link } from "react-router-dom";
 
 export function SignUp(){
   return(
@@ -46,7 +47,7 @@ function SignInForm(){
       <Button variant="secondary" className="w-100 mb-3">
         Sign Up
       </Button>
-      <a className="text-center d-block" href="#">Already have an account?</a>
+      <Link className="d-block w-100 text-center" to="/signin" >Already have an account?</Link>
     </Form>
   )
 }
