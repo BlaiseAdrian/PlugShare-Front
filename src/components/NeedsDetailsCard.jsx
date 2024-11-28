@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SolutionForm from './AddSolutionCard';
 
 function NeedsDetailsCard({ need }) { 
-    const { title, price, location, quality, details } = need;
+    const { title, location, purpose, details } = need;
     
     return (
         <div className="card detailCard mx-3" style={{minHeight: "75vh"}}>
@@ -15,9 +15,8 @@ function NeedsDetailsCard({ need }) {
                     </div>
                 </div>
                 <hr />
-                <p className="card-text"><strong>Price:</strong> {price}</p>
                 <p className="card-text"><strong>Location:</strong> {location}</p>
-                <p className="card-text"><strong>Quality:</strong> {quality}</p>
+                <p className="card-text"><strong>Purpose:</strong> {purpose}</p>
                 <p className="card-text"><strong>Details:</strong></p>
                 <div className="details m-2 p-2 d-block bg-dark text-light">
                     {details}

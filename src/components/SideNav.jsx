@@ -1,40 +1,9 @@
-/*
-<div className="profile-section text-center py-4">
-<img
-    src="https://via.placeholder.com/100"
-    alt="Profile"
-    className="profile-pic rounded-circle mb-2"
-/>
-<h6 className="profile-name">John Doe</h6>
-</div>
-
-<nav className="nav-links">
-<Link to="/community-plugs" className="nav-link d-flex align-items-center py-2">
-    <i className="fas fa-users me-2"></i> Community Plugs
-</Link>
-<Link to="/" className="nav-link d-flex align-items-center py-2">
-    <i className="fas fa-list me-2"></i> Community Needs
-</Link>
-<Link to="/personal-list" className="nav-link d-flex align-items-center py-2">
-    <i className="fas fa-list me-2"></i> Personal List
-</Link>
-<Link to="/faqs" className="nav-link d-flex align-items-center py-2">
-    <i className="fas fa-question-circle me-2"></i> FAQs
-</Link>
-</nav>
-
-<div className="logout-section pb-4">
-<button className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
-    <i className="fas fa-sign-out-alt me-2"></i> Log Out
-</button>
-</div>
-*/
 
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import '../SideNav.css';
 
 function SideNav({ isOpen, toggleSideNav }) {
@@ -57,11 +26,11 @@ function SideNav({ isOpen, toggleSideNav }) {
                         <div className="d-flex flex-column">
                             <div className="d-flex align-items-center mb-1">
                                     <FontAwesomeIcon icon={faStar} className="fa-fw me-3 pe-4"/> 
-                                <span>Stars</span>
+                                <span className="profile-name">56</span>
                             </div>
                             <div className="d-flex align-items-center mb-1">
                                 <FontAwesomeIcon icon={faAward} className="fa-fw me-3 pe-4"/>
-                               <span>Badges</span>
+                               <span className="profile-name">2</span>
                             </div>
                         </div>
                     </div>
@@ -78,6 +47,18 @@ function SideNav({ isOpen, toggleSideNav }) {
                         <Link to="/personal-list" className={`nav-link ${location.pathname === '/personal-list' ? 'active' : ''}`}>
                             <FontAwesomeIcon icon={faHeart} className="fa-fw me-3 pe-4"/>
                             Personal List
+                        </Link>
+                        <Link to="/Plugs" className={`nav-link ${location.pathname === '/Plugs' ? 'active' : ''}`}>
+                            <FontAwesomeIcon icon={faLightbulb} className="fa-fw me-3 pe-4"/>
+                            Community Plugs
+                        </Link>
+                        <Link to="/Endorsers" className={`nav-link ${location.pathname === '/Endorsers' ? 'active' : ''}`}>
+                            <FontAwesomeIcon icon={faHandshake} className="fa-fw me-3 pe-4"/>
+                            Endorsers
+                        </Link>
+                        <Link to="/MyEndorsements" className={`nav-link ${location.pathname === '/MyEndorsements' ? 'active' : ''}`}>
+                            <FontAwesomeIcon icon={faHandsHelping} className="fa-fw me-3 pe-4"/>
+                            My Endorsements
                         </Link>
                         <Link to="/faqs" className={`nav-link ${location.pathname === '/faqs' ? 'active' : ''}`}>
                             <FontAwesomeIcon icon={faQuestionCircle} className="fa-fw me-3 pe-4"/> 

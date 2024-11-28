@@ -12,6 +12,7 @@
   align-items: center;
   border-bottom: 1px solid #f2f2f2;
   height: 10vh;
+  background-color: #e3f2fd;
 }
 
 
@@ -37,7 +38,11 @@
 }
 
 .card-text {
-  font-size: 0.9rem;
+  font-size: 1rem;
+}
+
+.card-info {
+  margin-left: 5vw;
 }
 
 .text-primary {
@@ -45,4 +50,47 @@
   text-decoration: underline;
 }
 
+.container {
+  display: inline-block; /* Ensures the container wraps the content */
+  position: relative; /* Positioning context for the "top-right" element */
+}
 
+.top-right {
+  font-size: 1em; /* Optional: Make the top-right element smaller */
+  color: red; /* Optional: Change color */
+}
+
+.slide-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.slide-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.btn {
+  border-radius: 2rem;
+  color: white;
+}
+
+.btn-primary {
+  background-color: rgb(22, 71, 204);
+}
+
+.details {
+  border-radius: 5px;
+}

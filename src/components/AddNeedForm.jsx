@@ -1,27 +1,46 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useContext, useState } from 'react';
+import { DataContext } from './DataContext';
 
-function NeedForm({ show, onClose }) {
-    const [category, setCategory] = useState("");
-    const [location, setLocation] = useState("");
-    const [quality, setQuality] = useState("");
-    const [price, setPrice] = useState("");
-    const [details, setDetails] = useState("");
-    const [otherCategory, setOtherCategory] = useState("");
-    const [otherLocation, setOtherLocation] = useState("");
+function NeedForm({ show, onClose, t_itle = '', c_ategory = '', l_ocation = '', p_urpose = '', d_etails = '' }) {
+    const [title, setTitle] = useState(t_itle);
+    const [category, setCategory] = useState(c_ategory);
+    const [location, setLocation] = useState(l_ocation);
+    const [purpose, setPurpose] = useState(p_urpose);
+    const [details, setDetails] = useState(d_etails);
+    const [otherCategory, setOtherCategory] = useState('');
+    const [otherLocation, setOtherLocation] = useState('');
+
+    const { addItem } = useContext(DataContext);
 
     const handleCategoryChange = (e) => {
         setCategory(e.target.value);
-        if (e.target.value !== "Other") {
-            setOtherCategory("");
+        if (e.target.value !== 'Other') {
+            setOtherCategory('');
         }
     };
 
     const handleLocationChange = (e) => {
         setLocation(e.target.value);
-        if (e.target.value !== "Other") {
-            setOtherLocation("");
+        if (e.target.value !== 'Other') {
+            setOtherLocation('');
         }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newNeed = {
+            id: Date.now(), // Use a unique ID
+            owner: ['Tom', 'Mark'],
+            title: title,
+            category: category === 'Other' ? otherCategory : category,
+            location: location === 'Other' ? otherLocation : location,
+            percentage: '80%',
+            purpose: purpose,
+            details: details,
+        };
+
+        addItem(newNeed); // Add item to context
+        onClose(); // Close the modal after submission
     };
 
     return (
@@ -29,11 +48,11 @@ function NeedForm({ show, onClose }) {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Add a Need</h5>
+                        <h5 className="modal-title">Add to List</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label className="form-label">Category:</label>
                                 <select className="form-select" value={category} onChange={handleCategoryChange}>
@@ -42,7 +61,7 @@ function NeedForm({ show, onClose }) {
                                     <option value="Electronics">Electronics</option>
                                     <option value="Other">Other</option>
                                 </select>
-                                {category === "Other" && (
+                                {category === 'Other' && (
                                     <input
                                         type="text"
                                         className="form-control mt-2"
@@ -53,14 +72,23 @@ function NeedForm({ show, onClose }) {
                                 )}
                             </div>
                             <div className="mb-3">
+                                <label className="form-label">Title of your need:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                />
+                            </div>
+                            <div className="mb-3">
                                 <label className="form-label">Location:</label>
                                 <select className="form-select" value={location} onChange={handleLocationChange}>
-                                    <option value="">Select Location</option>
+                                    <option value={l_ocation}>{l_ocation}</option>
                                     <option value="Kampala">Kampala</option>
                                     <option value="Entebbe">Entebbe</option>
                                     <option value="Other">Other</option>
                                 </select>
-                                {location === "Other" && (
+                                {location === 'Other' && (
                                     <input
                                         type="text"
                                         className="form-control mt-2"
@@ -71,18 +99,13 @@ function NeedForm({ show, onClose }) {
                                 )}
                             </div>
                             <div className="mb-3">
-                                <label className="form-label">Quality Rating (Compared to Benchmark):</label>
-                                <select className="form-select" value={quality} onChange={(e) => setQuality(e.target.value)}>
-                                    <option value="">Select Quality</option>
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Premium">Premium</option>
-                                </select>
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label">Prices:</label>
-                                <input type="text" className="form-control" value={price}  onChange={(e) => setPrice(e.target.value)}/>
+                                <label className="form-label">Purpose:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={purpose}
+                                    onChange={(e) => setPurpose(e.target.value)}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Details:</label>
@@ -93,17 +116,20 @@ function NeedForm({ show, onClose }) {
                                     onChange={(e) => setDetails(e.target.value)}
                                 ></textarea>
                             </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                    Discard
+                                </button>
+                                <button type="submit" className="btn btn-primary">
+                                    Submit
+                                </button>
+                            </div>
                         </form>
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={onClose}>Discard</button>
-                        <button type="button" className="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
-
 
 export default NeedForm;

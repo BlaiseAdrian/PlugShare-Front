@@ -4,12 +4,40 @@ import FAQCard from './FAQCard';
 
 const faqs = [
   {
+    question: "What does the Platform aim to do?",
+    answer: "The platform aims to consolidate individual knowledge about the best places to get stuff, by building a database of good places discovered by members. This is to help one another avoid overpaying for stuff or being cheated just because of ignorance."
+  },  
+  {
     question: "How does the platform work?",
+    answer: "Members can see the all the needs, i.e what products or services people are looking for under the Community List. Any one can submit a solution, i.e a place they know where others can get those products or services. In this way, a database of great plugs is built."
+  },  
+  {
+    question: "What are Personal Needs?",
+    answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
+  }, 
+  {
+    question: "What are Community Needs?",
+    answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
+  }, 
+  {
+    question: "How are Solutions Submitted?",
+    answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
+  },  
+  {
+    question: "Why Submit Solutions?",
     answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
   },
   {
-    question: "How do I get stars?",
+    question: "How are Solutions Ranked?",
+    answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
+  },
+  {
+    question: "Who are Endorsers?",
     answer: "You can earn stars by actively participating in the community and contributing valuable insights."
+  }, 
+  {
+    question: "How do I get Stars?",
+    answer: "The platform uses community effort to brainstorm and research service providers for the most common community issues."
   },
   {
     question: "How do I get badges?",
