@@ -4,7 +4,7 @@ import NeedsDetailsCard from './NeedsDetailsCard';
 import SolutionForm from './AddSolutionCard';
 import { useLocation} from 'react-router-dom';
 
-function NeedsDetails() {
+function PersonalNeedsDetails() {
 
     const { state } = useLocation(); 
     const [showModal, setShowModal] =useState(false);
@@ -22,10 +22,10 @@ function NeedsDetails() {
                         address = {state.location}
                     />
             <div>
-            <NeedsDetailsCard need={state} />
+                <NeedsDetailsCard need={state} />
             </div>
         </div>
     );
 }
 
-export default NeedsDetails;
+export default PersonalNeedsDetails;

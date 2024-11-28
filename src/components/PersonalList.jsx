@@ -1,48 +1,30 @@
-import React, { useState } from 'react';
-import NeedsCard from './NeedsCard';
+import React, { useContext, useState } from 'react';
+import NeedsCard from './PersonalNeedsCard';
 import NeedForm from './AddNeedForm';
+import { useLocation } from 'react-router-dom';
+import { DataContext } from './DataContext';
+import PersonalNeedsCard from './PersonalNeedsCard';
 
 function PersonalList() {
-  const items = [
-    {
-      title: "Cheap Household Items",
-      price: "10% below Market prices",
-      location: "Anywhere around Kampala",
-      percentage: "20%",
-      quality: "Medium",
-      details: "sdrcgbhjmkjnhbfdfvbhijonibfcdxrtgbjomkjigvydxr"
-    },
-    {
-      title: "Affordable Electronics",
-      price: "15% below Market prices",
-      location: "Central Market, Kampala",
-      percentage: "60%",
-      quality: "Medium",
-      details: "sdrcgbhjmkjnhbfdfvbhijonibfcdxrtgbjomkjigvydxr"
-    },
-    {
-      title: "Quality Kitchenware",
-      price: "5% below Market prices",
-      location: "Local stores in Kampala",
-      percentage: "!",
-      quality: "Medium",
-      details: "sdrcgbhjmkjnhbfdfvbhijonibfcdxrtgbjomkjigvydxr"
-    },
-    // Add more items as needed
-  ];
-
+  const { data} = useContext(DataContext);
+  
+  const items = data.filter((need) => need.owner.includes("Mark"));
   const [showModal, setShowModal] =useState(false);
+  const n = items.length;
 
   return (
     <div> 
         <div>
-            <button className="btn btn-primary mb-3 ms-3" onClick={() => setShowModal(true)}>Add Need</button>
+          <div className="d-flex align-items-center">           
+          <button className="btn btn-primary mb-3 mx-3" onClick={() => setShowModal(true)}>Add Need</button>
             <NeedForm
                 show={showModal}
                 onClose={() => setShowModal(false)}
             />
+            <h2 className="mb-3 mx-3">{n}/3</h2>
+          </div>
             {items.map((item, index) => (
-                <NeedsCard key={index} {...item} />
+                <PersonalNeedsCard key={index} {...item} />
             ))}
         </div>
     </div>

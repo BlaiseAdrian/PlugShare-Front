@@ -132,24 +132,36 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-function Navbar({toggleSideNav}) {
+function Navbar({toggleSideNav, page = 'try', state}) {
 
     const location = useLocation();
 
     // Define the page hierarchy with possible parent pages for subpages
     const pageHierarchy = {
         '/': { name: 'Community Needs' },
-        '/community-plugs': { name: 'Community Plugs' },
         '/personal-list': { name: 'Personal List' },
         '/faqs': { name: 'FAQs' },
-        '/NeedsDetails': { name: 'Details', parent: '/products' },  
+        '/Plugs': { name: 'Community Plugs' },
+        '/Endorsers': { name: 'Endorsers' },
+        '/MyEndorsements': { name: 'My Endorsements' },
+        '/EndorsementSolutionsDetails': { name: 'Details', parent: '/MyEndorsements' },
+        '/AlternativesDetails': { name: 'Details', parent: '/SolutionAlternatives' },
+        '/PlugDetails': { name: 'Plug Details', parent: '/Plugs' }, 
         '/SolutionsDetails':  {
             name: 'Solution Details',
             parents: ['/Solutions', '/community-plugs'], // Multiple possible parents
         }, 
-        '/NeedsDetails': {
+        '/PersonalNeedsDetails': {
+            name: `${page} Details`,
+            parents: ['/personal-list'], 
+        }, 
+        '/CommunityNeedsDetails': {
             name: 'Details',
-            parents: ['/personal-list', '/'], // Multiple possible parents
+            parents: ['/'], 
+        }, 
+        '/SolutionAlternatives': {
+            name: 'Alternatives',
+            parents: ['/Solutions', '/community-plugs'], 
         },
         '/Solutions': {
             name: 'Solutions',
@@ -205,7 +217,7 @@ function Navbar({toggleSideNav}) {
     }, [location.pathname]);
 
     return (
-        <nav className="navbar mb-3 navbar-light bg-light">
+        <nav className="navbar mb-3 navbar-light">
         <button
         className={`navbar-toggler d-lg-none px-3`}
                         type="button"
@@ -225,7 +237,7 @@ function Navbar({toggleSideNav}) {
             {breadcrumb.current.name}
             </span>
         </div>
-        <span className="navbar-brand ms-auto fw-bold">PlugShare</span>
+        <span className="navbar-brand ms-auto fw-bold fs-3">PlugShare</span>
         </nav>
     );
 }

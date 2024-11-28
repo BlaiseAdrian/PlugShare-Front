@@ -46,6 +46,13 @@
     margin-left: 10px;
 }
 
+.pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* Profile name styling */
 .profile-name {
     font-size: 1rem;

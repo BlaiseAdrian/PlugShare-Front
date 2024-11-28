@@ -23,7 +23,7 @@ function FAQAccordion({ faqs }) {
             aria-labelledby={`heading${index}`}
             data-bs-parent="#faqAccordion"
           >
-            <div className="accordion-body">
+            <div className="accordion-body" style={{color: "green"}}>
               {faq.answer}
             </div>
           </div>

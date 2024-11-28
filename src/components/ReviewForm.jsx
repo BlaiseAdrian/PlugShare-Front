@@ -49,15 +49,15 @@ function ReviewModal({ show, onClose, shopName }) {
                             >
                                 &#9873; {/* Flag icon */}
                             </span>
-                            The Information about Price and Quality is false.
+                            The Information about the place is misleading. It is a scam.
                         </div>
 
                         {[
-                            "The Prices are good.",
-                            "The Quality is Good.",
+                            "The information presented is accurate.",
+                            "My needs were met.",
                             "Customer Service is Good.",
-                            "This is the Best Deal I have encountered",
-                            "It Should become a Community Plug",
+                            "This meets the purposes, and more",
+                            "The service is Excellent",
                         ].map((statement, index) => (
                             <div
                                 key={index}
