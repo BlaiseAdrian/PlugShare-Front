@@ -13,7 +13,7 @@ export function SignUp(){
       <div className= {styles["container"]}>
         <Header/>
         <h4 className="text-center fw-light mb-2">Sign Up</h4>
-        <SignInForm/>
+        <SignUpForm/>
       </div>
     </div>
   )
@@ -29,7 +29,7 @@ function Header(){
   )
 }
 
-function SignInForm(){
+function SignUpForm(){
 
   const {
     isLoading,
@@ -37,7 +37,7 @@ function SignInForm(){
     error,
     setError,
     handleSubmit
-  } = useSubmitForm({url: API + "/users/signup", onSuccess: handleSuccess})
+  } = useSubmitForm({url: API + "/users", method: "PUT", onSuccess: handleSuccess})
 
   function handleSuccess(data){
     
@@ -50,7 +50,7 @@ function SignInForm(){
       <Form onSubmit={handleSubmit} className="px-3 px-md-5">
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="" />
+          <Form.Control required type="email" placeholder="" />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>
@@ -58,12 +58,12 @@ function SignInForm(){
 
         <Form.Group className="mb-3" controlId="password">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="" />
+          <Form.Control required type="password" placeholder="" />
         </Form.Group>
 
         <Form.Group className="mb-4" controlId="confirm-password">
           <Form.Label>Confirm Password</Form.Label>
-          <Form.Control type="password" placeholder="" />
+          <Form.Control required type="password" placeholder="" />
         </Form.Group>
         <Button type="submit" variant="secondary" className="w-100 mb-3">
           Sign Up

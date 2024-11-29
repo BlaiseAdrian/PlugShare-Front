@@ -10,7 +10,7 @@ export function FormErrorAlert({errorTitle, msg, setError}){
         dismissible
         className = {`form-error-content`}
       >
-        <Alert.Heading> {errorTitle} </Alert.Heading>
+        <Alert.Heading className="mb-3"> {errorTitle} </Alert.Heading>
         <p>
           { msg }
         </p>

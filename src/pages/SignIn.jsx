@@ -37,8 +37,10 @@ function Header(){
 function SignInForm(){
   const { setUser } = useUser()
 
-  function handleSuccess(data){
-    setUser(data)
+  function handleFormSuccess(data){
+    setUser(data.user_id)
+    localStorage.setItem("jwt", data.access_token)
+    localStorage.setItem("user", data.user_id)
   }
   const {
     isLoading,
@@ -46,7 +48,7 @@ function SignInForm(){
     error,
     setError,
     handleSubmit
-  } = useSubmitForm({url: API + "/users", onSuccess: handleSuccess})
+  } = useSubmitForm({url: API + "/users", method: "POST", onSuccess: handleFormSuccess})
 
   return(
     <>
@@ -59,7 +61,7 @@ function SignInForm(){
       >
         <Form.Group className="mb-4" controlId="email">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="" />
+          <Form.Control required type="email" placeholder="" />
         </Form.Group>
 
         <Form.Group className="mb-5" controlId="password">
@@ -68,7 +70,7 @@ function SignInForm(){
             <a href="#" className="ms-auto" >Forgot Password</a>
           </div>
 
-          <Form.Control type="password" placeholder="" />
+          <Form.Control required type="password" placeholder="" />
         </Form.Group>
         <Button type = "submit" variant="secondary" className="w-100">
           Sign In

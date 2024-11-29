@@ -9,11 +9,11 @@ export function useFetch(url){
     async function fetchData(){
       try {
         const res = await fetch(url)
-        if (res.ok){
-          const data = await res.json()
+        const data = await res.json()
+        if (data.status){
           setData(data)
         } else {
-          setError("Response is not okay")
+          setError(new Error(data.message))
           setData(null)
         }
       } catch(err){
@@ -25,6 +25,6 @@ export function useFetch(url){
     fetchData()
   })
 
-  return {isLoading, data, error}
+  return { isLoading, data, error }
 
 }
