@@ -104,3 +104,57 @@
 .details {
   border-radius: 5px;
 }
+
+.form-loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.form-loader-content{
+  width: 300px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+
+}
+
+.form-error-backdrop{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.form-error-content{
+  flex-grow: 1;
+}
+
+.btn-close{
+  border: 2px solid transparent;
+  padding: 10px !important;
+  margin: 10px;
+}
+
+.btn-close:focus, .btn-close:active{
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.alert-heading{
+  font-size: 19px;
+}
