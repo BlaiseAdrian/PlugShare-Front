@@ -8,14 +8,17 @@ import './index.css';
 import App from './App';
 import { DataProvider } from './components/DataContext';
 import { UserProvider } from './contexts/UserContext';
+import { DashboardProvider } from './contexts/DashboardContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <DataProvider>
-        <App />
-      </DataProvider>
+      <DashboardProvider>
+        <DataProvider>
+          <App />
+        </DataProvider>
+      </DashboardProvider>
     </UserProvider>
   </React.StrictMode>
 );

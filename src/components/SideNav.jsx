@@ -5,9 +5,22 @@ import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import '../SideNav.css';
+import { useUser } from '../hooks/useUser';
+import { useDashboard } from '../hooks/useDashboard';
 
 function SideNav({ isOpen, toggleSideNav }) {
     const location = useLocation();
+    const {setUser} = useUser()
+    const { dashboard, setDashboard } = useDashboard()
+
+    const profile = dashboard.profile
+
+    function signout(){
+      setUser(null)
+      setDashboard(null)
+      localStorage.removeItem("user")
+      localStorage.removeItem("jwt")
+    }
 
     return (
         <>
@@ -19,18 +32,18 @@ function SideNav({ isOpen, toggleSideNav }) {
                         <div className="d-flex align-items-center mb-3">
                             <img src="https://via.placeholder.com/50" alt="Profile" className="profile-pic rounded-circle me-3" />
                             <div className="flex-grow-1">
-                                <h6 className="profile-name mb-0">John Doe</h6>
+                                <h6 className="profile-name mb-0"> { profile.user_name } </h6>
                             </div>
                             <FontAwesomeIcon icon={faEdit} className="text-muted edit-icon" />
                         </div>
                         <div className="d-flex flex-column">
                             <div className="d-flex align-items-center mb-1">
                                     <FontAwesomeIcon icon={faStar} className="fa-fw me-3 pe-4"/> 
-                                <span className="profile-name">56</span>
+                                <span className="profile-name">{profile.stars}</span>
                             </div>
                             <div className="d-flex align-items-center mb-1">
                                 <FontAwesomeIcon icon={faAward} className="fa-fw me-3 pe-4"/>
-                               <span className="profile-name">2</span>
+                               <span className="profile-name">{profile.points}</span>
                             </div>
                         </div>
                     </div>
@@ -68,8 +81,11 @@ function SideNav({ isOpen, toggleSideNav }) {
 
                     {/* Logout Button at the bottom */}
                     <div className="logout-section">
-                        <button className="btn btn-link text-danger" onClick={toggleSideNav}>
-                            <FontAwesomeIcon icon={faSignOutAlt} className="me-3 fa-fw pe-4"/> Logout
+                        <button
+                          className="btn btn-link text-danger"
+                          onClick = {()=>{toggleSideNav(); signout()}}
+                        >
+                            <FontAwesomeIcon icon={faSignOutAlt} className="me-3 fa-fw pe-4"/> Signout
                         </button>
                     </div>
                 </div>

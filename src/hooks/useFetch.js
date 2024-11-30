@@ -1,30 +1,38 @@
 import { useState, useEffect } from "react";
 
-export function useFetch(url){
+export function useFetch(url, onSuccess = ()=>{}){
   const [isLoading, setIsloading] = useState(true)
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
 
   useEffect(()=> {
-    async function fetchData(){
-      try {
-        const res = await fetch(url)
-        const data = await res.json()
-        if (data.status){
-          setData(data)
-        } else {
-          setError(new Error(data.message))
-          setData(null)
+    fetchData()
+  }, [])
+
+  async function fetchData(){
+    setIsloading(true)
+    setError(null)
+    try {
+      const res = await fetch(url, {
+        headers: {
+          Authorization : localStorage.getItem("access_token")
         }
-      } catch(err){
-        setError(err)
+      })
+      const data = await res.json()
+      if (data.status || res.ok){
+        setData(data)
+        onSuccess(data)
+      } else {
+        setError(new Error(data.message))
         setData(null)
       }
-      setIsloading(false)
+    } catch(err){
+      setError(err)
+      setData(null)
     }
-    fetchData()
-  })
+    setIsloading(false)
+  }
 
-  return { isLoading, data, error }
+  return { isLoading, data, error, fetchData }
 
 }
