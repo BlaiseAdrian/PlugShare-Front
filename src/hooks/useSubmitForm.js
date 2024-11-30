@@ -19,13 +19,13 @@ export function useSubmitForm({url, method = "POST", onSuccess = ()=>{}}){
           },
           body: formData
         })
-        if (res.ok){
-          const data = await res.json()
+        const data = await res.json()
+        if (data.status){
           onSuccess(data)
           setData(data)
         } else {
-          setError(new Error("Response is not okay"))
           setData(null)
+          setError(new Error(data.message))
         }
       } catch(err){
         setError(err)

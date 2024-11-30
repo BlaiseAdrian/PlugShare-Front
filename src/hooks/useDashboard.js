@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { DataContext } from "../components/DataContext";
+import { DashboardContext } from "../contexts/DashboardContext";
 
 export function useDashboard(){
-  const { data, solutions, addItem, removeItem, addSolution } = useContext(DataContext)
-  return { data, solutions, addItem, removeItem, addSolution }
+  const { dashboard, setDashboard} = useContext(DashboardContext)
+  return { dashboard, setDashboard }
 }
