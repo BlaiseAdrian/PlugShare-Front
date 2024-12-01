@@ -22,8 +22,8 @@ export function LoadDashboard(){
         { 
           isLoading &&
           <div className="">
-            <Spinner className="mb-4" variant = "primary" />
-            <p className="h4" >Loading Dashboard ...</p>
+            <h1 className="fw-bolder mb-5 display-3 " >Plug Share</h1>
+            <Spinner variant = "secondary" />
           </div> 
 
         }
