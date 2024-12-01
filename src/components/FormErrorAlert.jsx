@@ -8,7 +8,7 @@ export function FormErrorAlert({errorTitle, msg, setError}){
         variant="danger"
         onClose = {() => setError(null)}
         dismissible
-        className = {`form-error-content`}
+        className = {`form-error-content px-3`}
       >
         <Alert.Heading className="mb-3"> {errorTitle} </Alert.Heading>
         <p>
