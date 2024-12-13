@@ -1,450 +1,519 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 // Create a Context
 export const DataContext = createContext();
-const items = [
-    {
-      id: 1,
-      owner: ["Blaise", "Tom"],
-      title: "Quality Kitchenware",
-      category: "Home appliances",
-      location: "Mukono Only",
-      percentage: "30%",
-      purpose: "Good quality, not interested in price",
-      details: "Brand new kitchenware of good quality like cutlery, racks, and kitchen appliances, preferably not made in China."
-    },
-    {
-      id: 2,
-      owner: ["Tom", "Eddy"],
-      title: "Cheap Phones",
-      category: "Phones",
-      location: "Anywhere around Kampala",
-      percentage: "20%",
-      purpose: "Low Prices",
-      details: "Brand new phones only, no used phones. These can be of any brand but obviously not flagships. Good quality is a bonus but not a requirement."
-    },
-    {
-      id: 3,
-      owner: ["Mary"],
-      title: "Affordable Laptops",
-      category: "Electronics",
-      location: "Kampala",
-      percentage: "25%",
-      purpose: "Budget-friendly",
-      details: "Second-hand laptops in good working condition, mainly for schoolwork and internet use. Priority is low cost, but quality should be sufficient to avoid frequent repairs."
-    },
-    {
-      id: 4,
-      owner: ["Tom", "Mark"],
-      title: "Eco-friendly Packaging",
-      category: "Packaging",
-      location: "Nationwide",
-      percentage: "50%",
-      purpose: "Sustainability",
-      details: "Biodegradable or reusable packaging materials for business purposes. Price matters as long as it doesn't compromise the eco-friendliness of the materials."
-    },
-    {
-      id: 5,
-      owner: ["Mark"],
-      title: "Reliable Internet Provider",
-      category: "Services",
-      location: "Jinja",
-      percentage: "40%",
-      purpose: "High-speed connection",
-      details: "Affordable and consistent internet service for both home and small office use. Preference is for good speed over cost, but options within budget are welcome."
-    },
-    {
-      id: 6,
-      owner: ["Eric"],
-      title: "Quality Furniture",
-      category: "Home decor",
-      location: "Mbale",
-      percentage: "30%",
-      purpose: "Long-lasting and stylish",
-      details: "Modern wooden furniture for the living room and dining room. High-quality materials are a priority, but affordable options are preferred."
-    },
-    {
-      id: 7,
-      owner: ["Eddy"],
-      title: "Fitness Equipment",
-      category: "Sports",
-      location: "Kampala",
-      percentage: "35%",
-      purpose: "Home gym setup",
-      details: "Second-hand or discounted gym equipment like dumbbells, treadmills, and resistance bands. Quality is important to avoid frequent breakdowns."
-    },
-    {
-      id: 8,
-      owner: ["Hope"],
-      title: "Organic Groceries",
-      category: "Food",
-      location: "Mukono",
-      percentage: "20%",
-      purpose: "Health-conscious",
-      details: "Fresh, organic produce such as vegetables, fruits, and grains sourced locally. Quality is key, and reasonable prices are a plus."
-    },
-    {
-      id: 9,
-      owner: ["Jerry"],
-      title: "Affordable Childcare Services",
-      category: "Services",
-      location: "Wakiso",
-      percentage: "50%",
-      purpose: "Cost-effective care",
-      details: "Reliable daycare services for working parents, with flexible hours. Cost matters, but safety and care quality are non-negotiable."
-    },
-    {
-      id: 10,
-      owner: ["Kate"],
-      title: "Professional Photography",
-      category: "Services",
-      location: "Kampala",
-      percentage: "40%",
-      purpose: "Event coverage",
-      details: "Affordable photography services for events such as weddings and graduations. Quality is crucial, even for budget packages."
-    },
-    {
-      id: 11,
-      owner: ["Eric", "Kate"],
-      title: "Electric Bikes",
-      category: "Transport",
-      location: "Kampala",
-      percentage: "30%",
-      purpose: "Eco-friendly transport",
-      details: "Affordable electric bicycles for commuting within urban areas. Quality should ensure durability and good battery life."
-    },
-    {
-      id: 12,
-      owner: ["Kate", "Bob"],
-      title: "Budget Clothing",
-      category: "Fashion",
-      location: "Kampala and Wakiso",
-      percentage: "15%",
-      purpose: "Affordable wear",
-      details: "Trendy and affordable clothing for men, women, and children. Quality is secondary to price but still desired."
-    },
-    {
-      id: 13,
-      owner: ["Mark", "Bob"],
-      title: "Local Art Pieces",
-      category: "Art",
-      location: "Nationwide",
-      percentage: "20%",
-      purpose: "Home decoration",
-      details: "Affordable handcrafted art pieces such as paintings, carvings, and pottery. High-quality craftsmanship is important."
-    },
-    {
-      id: 14,
-      owner: ["Blair", "Eddy"],
-      title: "Solar Power Systems",
-      category: "Energy",
-      location: "Rural areas",
-      percentage: "60%",
-      purpose: "Off-grid electricity",
-      details: "Affordable and reliable solar panels and batteries for rural homes. Long-term quality and durability are key considerations."
-    },
-    {
-      id: 15,
-      owner: ["Blair", "Wil"],
-      title: "Pet Supplies",
-      category: "Pets",
-      location: "Kampala and Entebbe",
-      percentage: "25%",
-      purpose: "Affordable care",
-      details: "Quality supplies like food, beds, and toys for cats and dogs. Price matters but should not compromise on the pet's well-being."
-    },
-    {
-      id: 16,
-      owner: ["Mike"],
-      title: "Tutorial Services",
-      category: "Education",
-      location: "Nationwide (online preferred)",
-      percentage: "30%",
-      purpose: "Skill improvement",
-      details: "Affordable online tutorials for mathematics, programming, and graphic design. Quality of teaching is the most critical factor."
-    },
-    {
-      id: 17,
-      owner: ["Rem"],
-      title: "Modern Kitchen Designs",
-      category: "Interior Design",
-      location: "Kampala",
-      percentage: "40%",
-      purpose: "Stylish renovations",
-      details: "Affordable kitchen redesign services focusing on modern styles. High-quality materials and finishes are a priority."
-    },
-    {
-      id: 18,
-      owner: ["Rem"],
-      title: "Reliable Plumbing Services",
-      category: "Services",
-      location: "Mukono and Kampala",
-      percentage: "50%",
-      purpose: "Fixing issues",
-      details: "Affordable and reliable plumbing services for home repairs and installations. Quality service is valued over price."
-    },
-    {
-      id: 19,
-      owner: ["Jack"],
-      title: "Affordable Travel Packages",
-      category: "Tourism",
-      location: "Nationwide",
-      percentage: "25%",
-      purpose: "Budget-friendly trips",
-      details: "Cheap travel packages for local tourist destinations, including transport and accommodation. The quality of accommodations should match basic comfort standards."
-    },
-    {
-      id: 20,
-      owner: ["Boy"],
-      title: "Healthy Meal Deliveries",
-      category: "Food",
-      location: "Kampala and Mukono",
-      percentage: "30%",
-      purpose: "Convenience",
-      details: "Affordable meal delivery services offering healthy and balanced options. Quality and taste are equally as important as cost."
-    }
-  ];
-
-  const shops = [
-    {
-      id: 1,
-      name: "Blaise Shop",
-      location: "Kampala",
-      expectations: "All phones by Techno, Infinix, and Chinese brands",
-      exceptions: "This place does not have any phones by major companies like Samsung",
-      rating: 4.5,
-      flags: 2,
-      contacts: "12345673456",
-      details: "All phones come in a box. No possibility of return and no deliveries are done",
-      need: "Cheap Phones",
-      alternatives: [2, 3],
-      endorsers: ["John", "Mary"]
-    },
-    {
-      id: 2,
-      name: "Ben's Timber Shop",
-      location: "Kampala",
-      expectations: "All ideas the customer has can be made, with the delivery period based on the complexity of the design",
-      exceptions: "All furniture is made on order, so any ideas the customer has have to be custom-made",
-      rating: 3.5,
-      flags: 0,
-      contacts: "987345673456",
-      details: "All furniture is manufactured locally, only glass and metal accessories imported. Wood is sourced locally",
-      need: "Quality Furniture",
-      alternatives: [7, 3],
-      endorsers: ["Mat", "Mary", "Bob"]
-    },
-    {
-      id: 3,
-      name: "Green Earth Packaging",
-      location: "Nationwide",
-      expectations: "A variety of biodegradable packaging options are available in stock",
-      exceptions: "Custom designs take 2-3 weeks for delivery",
-      rating: 4.7,
-      flags: 1,
-      contacts: "09283456789",
-      details: "Affordable eco-friendly packaging solutions for small and medium businesses",
-      need: "Eco-friendly Packaging",
-      alternatives: [5, 6],
-      endorsers: ["Alice", "Musa"]
-    },
-    {
-      id: 4,
-      name: "ConnectNet Internet Solutions",
-      location: "Jinja",
-      expectations: "Reliable internet packages tailored for small businesses and families",
-      exceptions: "Speeds above 100Mbps not available in rural areas",
-      rating: 4.0,
-      flags: 0,
-      contacts: "08345783456",
-      details: "Affordable monthly packages with unlimited data options",
-      need: "Reliable Internet Provider",
-      alternatives: [8, 9],
-      endorsers: ["Faith", "Liam"]
-    },
-    {
-      id: 5,
-      name: "Solar & Beyond",
-      location: "Rural areas",
-      expectations: "Affordable solar solutions with warranties of up to 10 years",
-      exceptions: "Delivery to remote areas incurs additional fees",
-      rating: 4.8,
-      flags: 0,
-      contacts: "09876543210",
-      details: "Complete solar setups, including batteries and installation services",
-      need: "Solar Power Systems",
-      alternatives: [11],
-      endorsers: ["Nana", "Peter"]
-    },
-    {
-      id: 6,
-      name: "Health Harvest Foods",
-      location: "Mukono",
-      expectations: "Fresh, organic produce available daily",
-      exceptions: "No deliveries outside Mukono district",
-      rating: 4.6,
-      flags: 1,
-      contacts: "07823456789",
-      details: "Affordable pricing for quality organic vegetables and grains",
-      need: "Organic Groceries",
-      alternatives: [15],
-      endorsers: ["Cathy", "Ibrahim"]
-    },
-    {
-      id: 7,
-      name: "Mbale Home Creations",
-      location: "Mbale",
-      expectations: "Locally sourced, handcrafted wooden furniture with modern designs",
-      exceptions: "No ready-made furniture available, all items are custom-made",
-      rating: 4.2,
-      flags: 0,
-      contacts: "07734567890",
-      details: "Stylish and durable furniture for dining rooms and living rooms",
-      need: "Quality Furniture",
-      alternatives: [2],
-      endorsers: ["James", "Emily"]
-    },
-    {
-      id: 8,
-      name: "Urban Wheels Electric Bikes",
-      location: "Kampala",
-      expectations: "Affordable electric bikes with a focus on durability",
-      exceptions: "No servicing included after purchase",
-      rating: 4.1,
-      flags: 1,
-      contacts: "07012345678",
-      details: "All bikes come with a one-year battery warranty",
-      need: "Electric Bikes",
-      alternatives: [],
-      endorsers: ["Fred", "Linda"]
-    },
-    {
-      id: 9,
-      name: "Star Photography",
-      location: "Kampala",
-      expectations: "Professional event photography with high-quality equipment",
-      exceptions: "No video services available",
-      rating: 4.7,
-      flags: 0,
-      contacts: "07123456789",
-      details: "Packages available for weddings, graduations, and corporate events",
-      need: "Professional Photography",
-      alternatives: [],
-      endorsers: ["Sarah", "Isaac"]
-    },
-    {
-      id: 10,
-      name: "Healthy Deliveries Ltd.",
-      location: "Kampala and Mukono",
-      expectations: "Daily delivery of fresh and balanced meals",
-      exceptions: "No customization of meals beyond allergies",
-      rating: 4.4,
-      flags: 0,
-      contacts: "07654321789",
-      details: "Affordable pricing with weekly or monthly subscription options",
-      need: "Healthy Meal Deliveries",
-      alternatives: [6],
-      endorsers: ["Olive", "Victor"]
-    },
-    {
-      id: 11,
-      name: "Sunny Systems",
-      location: "Rural areas",
-      expectations: "Affordable solar kits for homes and small businesses",
-      exceptions: "Installations outside designated zones are not supported",
-      rating: 4.3,
-      flags: 1,
-      contacts: "09098765432",
-      details: "Free installation services within coverage areas",
-      need: "Solar Power Systems",
-      alternatives: [5],
-      endorsers: ["David", "Miriam"]
-    },
-    {
-      id: 12,
-      name: "Easy Fit Gym Supplies",
-      location: "Kampala",
-      expectations: "Affordable second-hand gym equipment in good condition",
-      exceptions: "No warranties on purchases",
-      rating: 3.8,
-      flags: 2,
-      contacts: "07129874567",
-      details: "Discounted prices on treadmills, dumbbells, and resistance bands",
-      need: "Fitness Equipment",
-      alternatives: [],
-      endorsers: ["Paul", "Tina"]
-    },
-    {
-      id: 13,
-      name: "Timeless Art Shop",
-      location: "Nationwide",
-      expectations: "Wide variety of handcrafted art pieces available for purchase",
-      exceptions: "No large sculptures shipped outside Kampala",
-      rating: 4.5,
-      flags: 1,
-      contacts: "07890234567",
-      details: "Affordable options for paintings, carvings, and pottery",
-      need: "Local Art Pieces",
-      alternatives: [],
-      endorsers: ["Diana", "Joseph"]
-    },
-    {
-      id: 14,
-      name: "Bright Minds Academy",
-      location: "Nationwide (online preferred)",
-      expectations: "Affordable online classes with experienced instructors",
-      exceptions: "No physical classes available",
-      rating: 4.6,
-      flags: 0,
-      contacts: "07984561234",
-      details: "Courses include mathematics, programming, and graphic design",
-      need: "Tutorial Services",
-      alternatives: [],
-      endorsers: ["Elijah", "Betty"]
-    },
-    {
-      id: 15,
-      name: "SafeCare Daycare",
-      location: "Wakiso",
-      expectations: "Reliable childcare services with flexible hours",
-      exceptions: "No services offered on weekends",
-      rating: 4.4,
-      flags: 1,
-      contacts: "07564321987",
-      details: "Affordable rates with daily activities for children",
-      need: "Affordable Childcare Services",
-      alternatives: [],
-      endorsers: ["Nancy", "George"]
-    },
-    {
-      id: 16,
-      name: "Artisan Kitchens",
-      location: "Kampala",
-      expectations: "Affordable modern kitchen redesigns with high-quality finishes",
-      exceptions: "No installations outside Kampala",
-      rating: 4.3,
-      flags: 1,
-      contacts: "07234567890",
-      details: "Specializing in modern designs with durable materials",
-      need: "Modern Kitchen Designs",
-      alternatives: [],
-      endorsers: ["Leah", "Simon"]
-    }
-  ];
 
 
-// Provide the context to children
+// Categories Array
+const categories = ['Electronics', 'Furniture', 'Utilities', 'Food', 'Art', 'Photography', 'Transport', 'Education'];
+
+// Subcategories Array with Descriptions
+const subCategories = [
+  { category: 'Electronics', name: 'Cheap Phones', description: 'Brand new phones below 500K' },
+  { category: 'Electronics', name: 'Phone Accessories', description: 'Phone accessories like chargers, earphones, etc.' },
+  { category: 'Electronics', name: 'Fitness Equipment', description: 'Affordable gym equipment for home and professional use' },
+  { category: 'Furniture', name: 'Affordable Furniture', description: 'Cheap but durable furniture for homes and offices' },
+  { category: 'Furniture', name: 'Quality Furniture', description: 'Modern kitchen redesigns with high-quality finishes' },
+  { category: 'Furniture', name: 'Quality Furniture', description: 'Modern kitchen redesigns with high-quality finishes' },
+  { category: 'Furniture', name: 'Modern Kitchen', description: 'Modern Kitchenware and Utencils' },
+  { category: 'Clothing', name: 'Fashionable Shoes', description: 'Casual and formal shoes for all occasions' },
+  { category: 'Groceries', name: 'Organic Groceries', description: 'Fresh, organic vegetables and grains' },
+  { category: 'Home Appliances', name: 'Kitchenware', description: 'Cooking utensils and tools' },
+  { category: 'Childcare', name: 'Affordable Childcare Services', description: 'Reliable daycare services with flexible options' },
+  { category: 'Utilities', name: 'Solar Power Systems', description: 'Complete solar setups, including batteries and installation' },
+  { category: 'Utilities', name: 'Reliable Internet Provider', description: 'Affordable and dependable internet solutions' },
+  { category: 'Photography', name: 'Professional Photography', description: 'Event photography with high-quality results' },
+  { category: 'Transport', name: 'Electric Bikes', description: 'Affordable and durable electric bikes' },
+  { category: 'Education', name: 'Tutorial Services', description: 'Online classes with experienced instructors' },
+  { category: 'Food', name: 'Healthy Meal Deliveries', description: 'Daily delivery of fresh and balanced meals' },
+  { category: 'Art', name: 'Local Art Pieces', description: 'Handcrafted art pieces, including paintings and carvings' }
+];
+
+
+
+const locations = ['Kampala', 'Entebbe', 'Jinja', 'Mbale', 'Mukono'];
+
+const itemsArray = [
+  {
+    id: 1,
+    owner: ["Blaise", "Tom"],
+    sub_category: "Modern Kitchen",
+    location: "Mukono",
+    details: "Brand new kitchenware of good quality like cutlery, racks, and kitchen appliances, preferably not made in China."
+  },
+  {
+    id: 2,
+    owner: ["Tom", "Eddy"],
+    sub_category: "Cheap Phones",
+    location: "Kampala",
+    details: "Brand new phones only, no used phones. These can be of any brand but obviously not flagships. Good quality is a bonus but not a requirement."
+  },
+  {
+    id: 3,
+    owner: ["Alice", "James"],
+    sub_category: "Phone Accessories",
+    location: "Entebbe",
+    details: "High-quality accessories like fast chargers, wireless earphones, and protective cases."
+  },
+  {
+    id: 4,
+    owner: ["Sarah", "Mark"],
+    sub_category: "Fitness Equipment",
+    location: "Jinja",
+    details: "Lightweight and durable home workout kits, including dumbbells and resistance bands."
+  },
+  {
+    id: 5,
+    owner: ["Mary", "Joseph"],
+    sub_category: "Affordable Furniture",
+    location: "Mbale",
+    details: "Durable tables and chairs suitable for small apartments or offices."
+  },
+  {
+    id: 6,
+    owner: ["Helen", "Andrew"],
+    sub_category: "Quality Furniture",
+    location: "Gulu",
+    details: "Luxury sofas and coffee tables with a modern touch, perfect for large living spaces."
+  },
+  {
+    id: 7,
+    owner: ["David", "Sandra"],
+    sub_category: "Fashionable Shoes",
+    location: "Kampala",
+    details: "Stylish sneakers and formal shoes available in multiple sizes and colors."
+  },
+  {
+    id: 8,
+    owner: ["Brian", "Zoe"],
+    sub_category: "Organic Groceries",
+    location: "Fort Portal",
+    details: "Locally grown fruits and vegetables delivered fresh every morning."
+  },
+  {
+    id: 9,
+    owner: ["Emily", "Patrick"],
+    sub_category: "Kitchenware",
+    location: "Lira",
+    details: "Non-stick pans, durable knives, and multi-purpose cooking tools."
+  },
+  {
+    id: 10,
+    owner: ["Grace", "Chris"],
+    sub_category: "Affordable Childcare Services",
+    location: "Kampala",
+    details: "Daycare centers with experienced nannies and child-friendly environments."
+  },
+  {
+    id: 11,
+    owner: ["Henry", "Sophia"],
+    sub_category: "Solar Power Systems",
+    location: "Masaka",
+    details: "Cost-effective solar panel setups, including high-capacity batteries."
+  },
+  {
+    id: 12,
+    owner: ["Kevin", "Paula"],
+    sub_category: "Reliable Internet Provider",
+    location: "Mbarara",
+    details: "Affordable fiber internet solutions for homes and small businesses."
+  },
+  {
+    id: 13,
+    owner: ["Simon", "Fiona"],
+    sub_category: "Professional Photography",
+    location: "Kampala",
+    details: "Event photography services, including weddings and corporate functions."
+  },
+  {
+    id: 14,
+    owner: ["Victor", "Anna"],
+    sub_category: "Electric Bikes",
+    location: "Jinja",
+    details: "Eco-friendly bikes suitable for city commutes, equipped with long-lasting batteries."
+  },
+  {
+    id: 15,
+    owner: ["Liam", "Diana"],
+    sub_category: "Tutorial Services",
+    location: "Kampala",
+    details: "Personalized online and in-person lessons in mathematics and science."
+  },
+  {
+    id: 16,
+    owner: ["Ella", "Tom"],
+    sub_category: "Healthy Meal Deliveries",
+    location: "Entebbe",
+    details: "Daily meal plans with vegetarian and low-carb options available."
+  },
+  {
+    id: 17,
+    owner: ["Luke", "Kate"],
+    sub_category: "Local Art Pieces",
+    location: "Fort Portal",
+    details: "Unique handcrafted sculptures and traditional paintings by local artisans."
+  },
+  {
+    id: 18,
+    owner: ["Olivia", "Sam"],
+    sub_category: "Quality Furniture",
+    location: "Arua",
+    details: "Elegant dining sets crafted from premium hardwood."
+  },
+  {
+    id: 19,
+    owner: ["Irene", "Carl"],
+    sub_category: "Fitness Equipment",
+    location: "Kampala",
+    details: "Treadmills and stationary bikes available at affordable prices."
+  },
+  {
+    id: 20,
+    owner: ["Max", "Linda"],
+    sub_category: "Phone Accessories",
+    location: "Gulu",
+    details: "Power banks and durable USB-C cables with fast charging capability."
+  },
+  {
+    id: 21,
+    owner: ["Leo", "Nina"],
+    sub_category: "Modern Kitchen",
+    location: "Kampala",
+    details: "High-quality stainless steel kitchenware for professional chefs."
+  },
+  {
+    id: 22,
+    owner: ["Hannah", "George"],
+    sub_category: "Solar Power Systems",
+    location: "Tororo",
+    details: "Compact solar kits suitable for rural households."
+  },
+  {
+    id: 23,
+    owner: ["Rachel", "Mark"],
+    sub_category: "Organic Groceries",
+    location: "Kasese",
+    details: "Organic dairy products from trusted local farmers."
+  },
+  {
+    id: 24,
+    owner: ["Paul", "Cynthia"],
+    sub_category: "Healthy Meal Deliveries",
+    location: "Kampala",
+    details: "Affordable family-sized meal plans delivered on time."
+  },
+  {
+    id: 25,
+    owner: ["Moses", "Jane"],
+    sub_category: "Electric Bikes",
+    location: "Mbale",
+    details: "Durable bikes with spare parts readily available."
+  },
+  {
+    id: 26,
+    owner: ["Evelyn", "Peter"],
+    sub_category: "Professional Photography",
+    location: "Masindi",
+    details: "Affordable photo and video coverage for outdoor events."
+  },
+  {
+    id: 27,
+    owner: ["Noah", "Sophia"],
+    sub_category: "Affordable Furniture",
+    location: "Hoima",
+    details: "Compact storage solutions and space-saving furniture."
+  },
+  {
+    id: 28,
+    owner: ["Brenda", "Adam"],
+    sub_category: "Fashionable Shoes",
+    location: "Mbarara",
+    details: "Trendy sandals and boots for casual outings."
+  },
+  {
+    id: 29,
+    owner: ["Victor", "Leah"],
+    sub_category: "Tutorial Services",
+    location: "Mukono",
+    details: "Affordable group classes in coding and programming."
+  },
+  {
+    id: 30,
+    owner: ["Sylvia", "David"],
+    sub_category: "Local Art Pieces",
+    location: "Kampala",
+    details: "Limited-edition paintings inspired by Ugandan wildlife."
+  }
+];
+
+
+const users = [
+  {
+    name: 'Current User',
+    stars: 10,
+    handshakes: 5
+  },
+  {
+    name: 'Mark',
+    stars: 11,
+    handshakes: 15    
+  }
+]
+
+const shops = [
+  {
+    id: 1,
+    name: "Blaise Shop",
+    provider: "Mary",
+    location: ["Kampala", "Mukono"],
+    red_flags: ['Joy', 'Enoch'],
+    contacts: "12345673456",
+    email: "blaise@gmail.com",
+    catalogue: "www.blaiseshop.com",
+    subcategory: "Cheap Phones",
+    alternatives: [2],
+    endorsers: ["John", "Mary"],
+    comments: [
+      { comment: "This shop closes at 7pm", date: "01/01/24", owner: "Mary", agreements: ["John"] },
+      { comment: "This shop has no deliveries", date: "12/07/23", owner: "Martin", agreements: ["Kate"] }
+    ]
+  },
+  {
+    id: 2,
+    name: "Ben's Electronics Shop",
+    provider: "John",
+    location: ["Kampala"],
+    red_flags: ['Joy', 'Enoch'],
+    contacts: "987345673456",
+    email: "benshop@gmail.com",
+    catalogue: "View Catalogue at www.benshop.com.",
+    subcategory: "Cheap Phones",
+    alternatives: [],
+    endorsers: ["Mat", "Mary", "Bob"],
+    comments: [
+      { comment: "This shop sells only refurbished items", date: "12/06/23", owner: "John", agreements: ["Martin"] },
+      { comment: "Take your Old gadgets to get a discount", date: "11/11/23", owner: "Martin", agreements: ["John", "Martha", "Bob"] }
+    ]
+  },
+  {
+    id: 3,
+    name: "Quality Home Furnishings",
+    provider: "Sarah",
+    location: ["Jinja"],
+    red_flags: ['Peter'],
+    contacts: "456789123",
+    email: "furnishings@gmail.com",
+    catalogue: "www.qualityfurnishings.com",
+    subcategory: "Quality Furniture",
+    alternatives: [],
+    endorsers: ["Alice"],
+    comments: [
+      { comment: "Highly recommended for premium furniture", date: "10/10/23", owner: "Sarah", agreements: ["Alice", "Tom"] },
+      { comment: "Expensive but worth it", date: "09/09/23", owner: "Alice", agreements: ["Tom", "Peter", "Zoe"] }
+    ]
+  },
+  {
+    id: 4,
+    name: "Tech Gear",
+    provider: "Brian",
+    location: ["Mbale", "Kampala"],
+    red_flags: ['Michael'],
+    contacts: "567890123",
+    email: "techgear@gmail.com",
+    catalogue: "www.techgear.com",
+    subcategory: "Phone Accessories",
+    alternatives: [5],
+    endorsers: ["Sophie", "Kevin"],
+    comments: [
+      { comment: "Limited stock for some items", date: "05/05/23", owner: "Brian", agreements: ["Sophie"] },
+      { comment: "Affordable prices for quality products", date: "04/04/23", owner: "Sophie", agreements: ["Brian", "Kevin"] }
+    ]
+  },
+  {
+    id: 5,
+    name: "FitLife Store",
+    provider: "Tom",
+    location: ["Kampala"],
+    red_flags: ['Joy', 'Enoch'],
+    contacts: "789012345",
+    email: "fitlife@gmail.com",
+    catalogue: "www.fitlife.com",
+    subcategory: "Fitness Equipment",
+    alternatives: [4],
+    endorsers: ["John", "Mary"],
+    comments: [
+      { comment: "Great discounts on gym equipment", date: "07/07/23", owner: "Tom", agreements: ["Mary"] },
+      { comment: "Delivery takes too long", date: "08/08/23", owner: "Mark", agreements: ["John", "Mary", "Kevin"] },
+      { comment: "Best quality in the area", date: "09/09/23", owner: "Alice", agreements: ["Mark", "Kevin"] }
+    ]
+  },
+  {
+    id: 6,
+    name: "EcoBikes",
+    provider: "Victor",
+    location: ["Jinja"],
+    red_flags: ['Nancy'],
+    contacts: "345678901",
+    email: "ecobikes@gmail.com",
+    catalogue: "www.ecobikes.com",
+    subcategory: "Electric Bikes",
+    alternatives: [],
+    endorsers: ["Olivia", "James"],
+    comments: [
+      { comment: "Efficient and durable bikes", date: "06/06/23", owner: "Victor", agreements: ["Olivia", "James"] },
+      { comment: "Needs better customer service", date: "05/05/23", owner: "James", agreements: ["Victor"] }
+    ]
+  },
+  {
+    id: 7,
+    name: "Artisans' Haven",
+    provider: "Emma",
+    location: ["Fort Portal"],
+    red_flags: [],
+    contacts: "123987456",
+    email: "artisans@gmail.com",
+    catalogue: "www.artisanshaven.com",
+    subcategory: "Local Art Pieces",
+    alternatives: [],
+    endorsers: ["Sophia", "Luke"],
+    comments: [
+      { comment: "Beautiful handcrafted pieces", date: "04/04/23", owner: "Emma", agreements: ["Sophia", "Luke"] },
+      { comment: "Prices are negotiable", date: "03/03/23", owner: "Luke", agreements: ["Sophia", "Emma"] }
+    ]
+  },
+  {
+    id: 8,
+    name: "Organic Fresh Market",
+    provider: "Rachel",
+    location: ["Kampala", "Mbarara"],
+    red_flags: ['Helen'],
+    contacts: "654321098",
+    email: "organicfresh@gmail.com",
+    catalogue: "www.organicfresh.com",
+    subcategory: "Organic Groceries",
+    alternatives: [],
+    endorsers: ["Tom", "Nina"],
+    comments: [
+      { comment: "Fresh vegetables every day", date: "02/02/23", owner: "Rachel", agreements: ["Tom", "Nina"] },
+      { comment: "Delivery times are inconsistent", date: "01/01/23", owner: "Nina", agreements: ["Rachel", "Tom"] }
+    ]
+  },
+  {
+    id: 9,
+    name: "Tech Accessories Hub",
+    provider: "Moses",
+    location: ["Gulu"],
+    red_flags: ['Grace'],
+    contacts: "987654321",
+    email: "techhub@gmail.com",
+    catalogue: "www.techaccessorieshub.com",
+    subcategory: "Phone Accessories",
+    alternatives: [4],
+    endorsers: ["Alice", "Paul"],
+    comments: [
+      { comment: "Wide range of accessories", date: "01/01/24", owner: "Moses", agreements: ["Alice", "Paul"] },
+      { comment: "Some items are overpriced", date: "12/12/23", owner: "Paul", agreements: ["Alice", "Moses"] },
+      { comment: "Friendly customer service", date: "11/11/23", owner: "Alice", agreements: ["Moses"] }
+    ]
+  },
+  {
+    id: 10,
+    name: "Chef's Choice",
+    provider: "Liam",
+    location: ["Mukono", "Kampala"],
+    red_flags: [],
+    contacts: "321654987",
+    email: "chefschoice@gmail.com",
+    catalogue: "www.chefschoice.com",
+    subcategory: "Modern Kitchen",
+    alternatives: [],
+    endorsers: ["Kate", "Linda"],
+    comments: [
+      { comment: "Best utensils in town", date: "10/10/23", owner: "Liam", agreements: ["Kate", "Linda", "Tom"] },
+      { comment: "Reasonable pricing for quality products", date: "09/09/23", owner: "Linda", agreements: ["Kate", "Tom"] }
+    ]
+  }
+];
+
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState(items); 
-  const [solutions, setSolutions] = useState(shops); 
+  const [data, setData] = useState(itemsArray);
+  const [solutions, setSolutions] = useState(shops);
+  const [feedback, setFeedback] = useState([]);
+  const [needs, setNeeds] = useState(groupAndSortItems(data));
+  const [currentSoln, setCurrentSoln] = useState([]);
+  const [currentSub, setCurrentSub] = useState();
+  const [user, setUser] = useState(users.find((person) => person.name === "Current User"));
+
+  function groupAndSortItems(items) {
+    // Step 1: Group items by sub_category and calculate owner counts
+    const grouped = items.reduce((acc, item) => {
+      if (!acc[item.sub_category]) {
+        acc[item.sub_category] = { items: [], totalOwners: 0 };
+      }
+      acc[item.sub_category].items.push(item);
+      acc[item.sub_category].totalOwners += item.owner.length; // Count owners
+      return acc;
+    }, {});
+
+    // Step 2: Sort subcategories by totalOwners (descending order)
+    const sortedSubcategories = Object.entries(grouped)
+      .sort((a, b) => b[1].totalOwners - a[1].totalOwners)
+      .map(([subCategory, data]) => {
+        const { items, totalOwners } = data;
+
+        // Step 3: Sort items within each subcategory by the number of owners (descending order)
+        items.sort((a, b) => b.owner.length - a.owner.length);
+
+        // Step 4: Extract unique locations within each subcategory
+        const uniqueLocations = [...new Set(items.map((item) => item.location))];
+
+        return {
+          sub_category: subCategory,
+          total_owners: totalOwners, // Include total owner count
+          items,
+          unique_locations: uniqueLocations,
+        };
+      });
+
+    return sortedSubcategories;
+  }
+
+  // Update needs whenever data changes
+  useEffect(() => {
+    const groupedNeeds = groupAndSortItems(data);
+    setNeeds(groupedNeeds);
+  }, [data]); // Recompute needs whenever data changes
 
   // Add a function to update the array
   const addItem = (item) => {
     setData((prevData) => [...prevData, item]); // Append new needs
   };
 
+  const updateSolution = (id, updatedSolution) => {
+    setSolutions((prevSolutions) =>
+      prevSolutions.map((solution) =>
+        solution.id === id ? updatedSolution : solution
+      )
+    );
+  };  
+
+  // Add a function to update the current solution
+  const updateCurrentSoln = (soln) => {
+    setCurrentSoln(soln); 
+  };
+
+    // Add a function to update the current solution
+    const updateCurrentSub = (subCategory) => {
+      setCurrentSub(subCategory); 
+    };
+
   const addSolution = (solution) => {
     setSolutions((prevSolutions) => [...prevSolutions, solution]); // Append new solution
+  };
+
+  const addFeedback = (text) => {
+    setFeedback((prevFeedback) => [...prevFeedback, text]);
+    console.log(feedback);
   };
 
   // Add a function to remove an item
@@ -453,7 +522,27 @@ export const DataProvider = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ data, solutions, addItem, removeItem, addSolution }}>
+    <DataContext.Provider
+      value={{
+        data,
+        user,
+        needs,
+        solutions,
+        categories,
+        subCategories,
+        locations,
+        currentSoln,
+        currentSub,
+        feedback,
+        addItem,
+        removeItem,
+        addSolution,
+        updateCurrentSoln,
+        updateCurrentSub,
+        updateSolution,
+        addFeedback
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

@@ -4,9 +4,9 @@ import EndorsementsCard from './MyEndorsementsCard';
 import Filter from './Filter';
 
 function MyEndorsements() {
-    const endorsements = [
-        { name: "Tendo’s SuperMarket", price: "15% below Market prices", location: "Kikuubo", quality: "Medium", rating: 3.5, points: 24, contacts: "12345673456", details: "ertyuijoubyvcdxrrtcyubiouibyvcdxtvyubinonbuvcfdfygbinoinibugydfgvubhionibugyfgvubhinonibgfghghbinojbhgfg ghbinobhgfgghhbj" },      
-    ];
+    if (true) {
+        return <p className='ms-4'>No details available for now.</p>;
+      }
 
     const [items, setItems] = useState(endorsements);
   

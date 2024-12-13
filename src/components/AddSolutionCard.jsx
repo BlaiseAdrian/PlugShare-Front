@@ -2,22 +2,28 @@ import React, { useContext, useState } from 'react';
 import { DataContext } from './DataContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function SolutionForm({ show, onClose, address = '', title = '' }) {
+function SolutionForm({ show, onClose, address = '', title = '', currentUser }) {
     const [name, setName] = useState('');
-    const [location, setLocation] = useState(address);
-    const [expectations, setExpectations] = useState('');
     const [contacts, setContacts] = useState('');
-    const [exceptions, setExceptions] = useState('');
+    const [email, setEmail] = useState('');    
+    const [location, setLocation] = useState(address);
+    const [catalogue, setCatalogue] = useState('');
     const [details, setDetails] = useState('');
-    const [otherLocation, setOtherLocation] = useState('');
+    const [locationSearch, setLocationSearch] = useState(address);
 
-    const { addSolution } = useContext(DataContext);
+    
+    const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
-    const handleLocationChange = (e) => {
-        setLocation(e.target.value);
-        if (e.target.value !== 'Other') {
-            setOtherLocation('');
-        }
+    const { addSolution, locations } = useContext(DataContext);
+
+    const filteredLocations = locations.filter((loc) =>
+        loc.toLowerCase().includes(locationSearch.toLowerCase())
+    );
+
+    const handleLocationSelect = (loc) => {
+        setLocation(loc);
+        setLocationSearch(loc);
+        setShowLocationDropdown(false);
     };
 
     const handleSubmit = (e) => {
@@ -25,16 +31,18 @@ function SolutionForm({ show, onClose, address = '', title = '' }) {
         const newSolution = {
             id: Date.now(),
             name: name,
-            location: location === 'Other' ? otherLocation : location,
-            expectations: expectations,
-            exceptions: exceptions,
-            rating: 0.0,
-            flags: 0,
+            location: location,
+            email: email,
+            provider: currentUser,
+            catalogue: catalogue,
+            red_flags: [],
             contacts: contacts,
-            details: details,
-            need: title,
+            subcategory: title,
             alternatives: [],
-            endorsers: ['Sarah', 'Isaac'],
+            endorsers: [],
+            comments: [
+                { comment: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
+              ]
         };
 
         console.log('New Solution:', newSolution); // Debugging log
@@ -63,45 +71,31 @@ function SolutionForm({ show, onClose, address = '', title = '' }) {
                                 />
                             </div>
 
-                            {/* Location */}
-                            <div className="mb-3">
-                                <label className="form-label">Location:</label>
-                                <select className="form-select" value={location} onChange={handleLocationChange}>
-                                    <option value={address}>{address}</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                {location === 'Other' && (
-                                    <input
-                                        type="text"
-                                        className="form-control mt-2"
-                                        placeholder="Specify other location"
-                                        value={otherLocation}
-                                        onChange={(e) => setOtherLocation(e.target.value)}
-                                    />
-                                )}
-                            </div>
-
-                            {/* Expectations */}
-                            <div className="mb-3">
-                                <label className="form-label">Expectations:</label>
-                                <textarea
-                                    className="form-control"
-                                    rows="2"
-                                    value={expectations}
-                                    onChange={(e) => setExpectations(e.target.value)}
-                                ></textarea>
-                            </div>
-
-                            {/* Exceptions */}
-                            <div className="mb-3">
-                                <label className="form-label">Exceptions:</label>
-                                <textarea
-                                    className="form-control"
-                                    rows="2"
-                                    value={exceptions}
-                                    onChange={(e) => setExceptions(e.target.value)}
-                                ></textarea>
-                            </div>
+                                    {/* Location */}
+                                    <div className="mb-3 position-relative">
+                                        <label className="form-label">Location:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={locationSearch}
+                                            onChange={(e) => {
+                                                setLocationSearch(e.target.value);
+                                                setShowLocationDropdown(true);
+                                            }}
+                                            onFocus={() => setShowLocationDropdown(true)}
+                                            onBlur={() => setTimeout(() => setShowLocationDropdown(false), 150)}
+                                            placeholder="Search location"
+                                        />
+                                        {showLocationDropdown && (
+                                            <ul className="dropdown-menu show" style={{ position: 'absolute', width: '100%' }}>
+                                                {filteredLocations.map((loc) => (
+                                                    <li key={loc} onClick={() => handleLocationSelect(loc)}>
+                                                        <button className="dropdown-item">{loc}</button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
 
                             {/* Contacts */}
                             <div className="mb-3">
@@ -114,9 +108,31 @@ function SolutionForm({ show, onClose, address = '', title = '' }) {
                                 />
                             </div>
 
+                            {/* Email */}
+                            <div className="mb-3">
+                                <label className="form-label">Email, if any:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>                            
+
+                            {/* Catalogue */}
+                            <div className="mb-3">
+                                <label className="form-label">Link to View Catalogue</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={catalogue}
+                                    onChange={(e) => setCatalogue(e.target.value)}
+                                />
+                            </div>                            
+
                             {/* Details */}
                             <div className="mb-3">
-                                <label className="form-label">Details:</label>
+                                <label className="form-label">Helpful Details:</label>
                                 <textarea
                                     className="form-control"
                                     rows="3"

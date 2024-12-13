@@ -1,28 +1,48 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import SolutionForm from './AddSolutionCard';
+import NeedForm from './AddNeedForm';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { DataContext } from './DataContext';
+
 
 function NeedsDetailsCard({ need }) { 
-    const { title, location, purpose, details } = need;
+    const { data, subCategories } = useContext(DataContext);
+    const needData = data.find((item) => item.id === need.id);
+    const { sub_category, location, owner, details, id } = needData;
+    const [showNeedsModal, setShowNeedsModal] =useState(false);
+    const getCategoryForSubCategory = (subCategoryName) => {
+        const match = subCategories.find((subCat) => subCat.name === subCategoryName);
+        return match ? match.category : null; // Return the category or null if not found
+    };
+    
+const category =  getCategoryForSubCategory(sub_category);   
     
     return (
-        <div className="card detailCard mx-3" style={{minHeight: "75vh"}}>
             
             <div className="card-body">
-                <div className="d-flex justify-content-between align-items-center">
-                    <div className="mw-30">
-                        <h5 className="card-title mb-0">{title}</h5>
-                    </div>
-                </div>
-                <hr />
-                <p className="card-text"><strong>Location:</strong> {location}</p>
-                <p className="card-text"><strong>Purpose:</strong> {purpose}</p>
-                <p className="card-text"><strong>Details:</strong></p>
-                <div className="details m-2 p-2 d-block bg-dark text-light">
+                <div className="details mx-3 p-2 d-block bg-dark text-light">
                     {details}
                 </div>
+            <div className="d-flex align-items-center">           
+            <div className="d-flex ps-3 mx-3 mt-1">
+            <FontAwesomeIcon icon={faUser} className="fa-fw me-1 mt-1"/>
+            <p style={{ color: 'blue' }}>{owner.length}</p>
+            </div>    
+            <FontAwesomeIcon icon={faThumbsUp} onClick={() => setShowNeedsModal(true)} className="fa-fw pe-4 mx-3 mt-1 mb-3"/>
+            <NeedForm
+                show={showNeedsModal}
+                onClose={() => setShowNeedsModal(false)}
+                sub_category = {sub_category}
+                id = {id}
+                c_ategory = {category}
+                l_ocation = {location}
+                d_etails = {details}
+            />
             </div>
-        </div>
+            </div>
     );
 }
 
