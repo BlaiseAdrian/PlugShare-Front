@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import EndorsersCard from './EndorsersCard';
 
 function Endorsers() {
+    if (true) {
+        return <p className='ms-4'>No details available for now.</p>;
+      }
     const endorsers = [
         { name: "Blaise", points: 60, endorsements: 7, redFlags: 0, position: 1 },
         { name: "Angel", points: 58, endorsements: 7, redFlags: 0, position: 2 },

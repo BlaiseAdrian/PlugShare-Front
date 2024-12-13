@@ -22,7 +22,10 @@ function PersonalNeedsDetails() {
                         address = {state.location}
                     />
             <div>
-                <NeedsDetailsCard need={state} />
+            <p className="card-text"><strong>Details:</strong></p>
+                <div className="details m-2 p-2 d-block bg-dark text-light">
+                    {state.details}
+                </div>
             </div>
         </div>
     );

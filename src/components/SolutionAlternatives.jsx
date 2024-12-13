@@ -11,7 +11,7 @@ function SolutionAlternatives() {
 
   // Ensure the state exists
   if (!state) {
-    return <p>No details available for "state".</p>;
+    return <p>No details available for now.</p>;
   }
 
   const { name, alternatives } = state; // Destructure title and alternatives from state

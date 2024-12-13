@@ -4,6 +4,11 @@ import Filter from './Filter';
 import SolutionCard from './SolutionCard';
 
 function Plugs({shops}) {
+
+  if (true) {
+    return <p className='ms-4'>No details available for now.</p>;
+  }
+  
 // Sort and group the solutions
 const groupAndSortShops = (shops) => {
     // Group by need

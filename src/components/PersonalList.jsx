@@ -8,7 +8,7 @@ import PersonalNeedsCard from './PersonalNeedsCard';
 function PersonalList() {
   const { data} = useContext(DataContext);
   
-  const items = data.filter((need) => need.owner.includes("Mark"));
+  const items = data.filter((need) => need.owner.includes("Current User"));
   const [showModal, setShowModal] =useState(false);
   const n = items.length;
 
