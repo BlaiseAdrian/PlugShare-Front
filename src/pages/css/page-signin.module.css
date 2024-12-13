@@ -1,0 +1,25 @@
+.page{
+  background-color: #F5F5F5;
+  padding-top: 50px;
+  height: 100vh;
+}
+.container{
+  width: 350px;
+  margin: 0 auto;
+  background-color: white;
+  padding-bottom: 60px; 
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative
+}
+
+
+@media (min-width: 600px) {
+  .container{
+    width: 400px
+  }
+}
+
+header{
+  background-color: #B3B3B3;
+}

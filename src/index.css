@@ -50,6 +50,16 @@
   text-decoration: underline;
 }
 
+.form-control{
+  border-width: 2px;
+
+}
+.form-label{
+  font-weight: bold;
+}
+.form-control:focus{
+  box-shadow: none;
+}
 .container {
   display: inline-block; /* Ensures the container wraps the content */
   position: relative; /* Positioning context for the "top-right" element */

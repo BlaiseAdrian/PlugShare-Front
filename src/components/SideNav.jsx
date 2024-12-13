@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import '../SideNav.css';
 import { DataContext } from './DataContext';
+import { useUser } from '../hooks/useUser';
+import { useDashboard } from '../hooks/useDashboard';
 
 function SideNav({ isOpen, toggleSideNav }) {
     const location = useLocation();
@@ -13,6 +15,17 @@ function SideNav({ isOpen, toggleSideNav }) {
     const { user } = useContext(DataContext);
 
     const {stars, handshakes, name} = user;
+    const {setUser} = useUser()
+    const { dashboard, setDashboard } = useDashboard()
+
+    const profile = dashboard.profile
+
+    function signout(){
+      setUser(null)
+      setDashboard(null)
+      localStorage.removeItem("user")
+      localStorage.removeItem("jwt")
+    }
 
     return (
         <>
@@ -73,8 +86,11 @@ function SideNav({ isOpen, toggleSideNav }) {
 
                     {/* Logout Button at the bottom */}
                     <div className="logout-section">
-                        <button className="btn btn-link text-danger" onClick={toggleSideNav}>
-                            <FontAwesomeIcon icon={faSignOutAlt} className="me-3 fa-fw pe-4"/> Logout
+                        <button
+                          className="btn btn-link text-danger"
+                          onClick = {()=>{toggleSideNav(); signout()}}
+                        >
+                            <FontAwesomeIcon icon={faSignOutAlt} className="me-3 fa-fw pe-4"/> Signout
                         </button>
                     </div>
                 </div>
