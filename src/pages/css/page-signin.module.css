@@ -10,7 +10,13 @@
   padding-bottom: 60px; 
   border-radius: 5px;
   overflow: hidden;
-  position: relative
+  position: relative;
+  animation: widen .5s ease-in-out forwards;
+}
+
+@keyframes widen {
+  from {transform:scale(0.7, 0.7); opacity: 0.8; }
+  to {transform:scaleZ(1, 1); opacity: 1;}
 }
 
 
