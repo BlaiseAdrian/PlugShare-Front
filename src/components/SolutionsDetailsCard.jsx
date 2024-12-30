@@ -1,18 +1,38 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReviewModal from './ReviewForm';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CommentsCard from './Comments';
 import { DataContext } from './DataContext';
 import AddCommentModal from './AddCommentModal';
+import SolutionForm from './AddSolutionCard';
 
 function SolutionsDetailsCard({ solution, main }) {
-  const { solutions, updateSolution } = useContext(DataContext);
-  const shop = solutions.find(shop => shop.id === solution.id);
+  const { solutions, updateSolution, forFeedback, updateCurrentSoln, currentSoln } = useContext(DataContext);
+  const [shop, setShop] = useState(solution || currentSoln || {});
+
+  updateCurrentSoln(solution);
+  //console.log(shop, currentSoln);
+  
   const { name, location, red_flags, contacts, catalogue, email, comments, id, endorsers, provider } = shop;
   const [showModal, setShowModal] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
+  const [showSolutionModal, setShowSolutionModal] =useState(false);
+  const [showContacts, setShowContacts] = useState(false); // New state for contacts visibility
   const currentUser = 'currentUser';
+
+  const [shouldAddFeedback, setShouldAddFeedback] = useState(false);
+
+  useEffect(() => {
+    setShop(solutions.find(shop => shop.id === solution.id));
+  }, [solutions, currentSoln]); // Recompute shop whenever data changes
+
+
+  const handleShowContacts = () => {
+    setShowContacts(true); // Show the contacts
+    setShouldAddFeedback(true); // Trigger feedback addition in useEffect
+    addsolnFeedback(shop);
+  };  
 
   const [showAddCommentModal, setShowAddCommentModal] = useState(false);
 
@@ -23,6 +43,16 @@ function SolutionsDetailsCard({ solution, main }) {
     };
     updateSolution(solution.id, updatedSolution);
   };
+
+  const addsolnFeedback = (soln) => {
+    const text = {
+      user: currentUser,
+      id: soln.id,
+      date: new Date().toISOString().split('T')[0], // Format: YYYY-MM-DD
+      name: soln.name,
+    }
+    forFeedback(text);
+  };  
 
   const getAlternatives = (shops, solutionId) => {
     const solution = shops.find(shop => shop.id === solutionId);
@@ -49,27 +79,55 @@ function SolutionsDetailsCard({ solution, main }) {
   return (
     <div className="card mx-3" style={{ minHeight: '85vh' }}>
       <div className="card-body">
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="card-title mb-0">{name}</h5>
-          <button
-            className="btn"
-            style={{
-              backgroundColor: shop.red_flags.includes(currentUser) ? 'red' : 'blue',
-              color: 'white',
-            }}
-            onClick={() => setShowModal(true)}
-          >
-            {shop.red_flags.includes(currentUser) ? 'Flagged' : 'Flag it'}
-          </button>
+      <div className="d-flex justify-content-between align-items-center">
+  <h5 className="card-title mb-0">{name}</h5>
 
-          <ReviewModal
-            show={showModal}
-            onClose={() => setShowModal(false)}
-            shop={shop}
-            currentUser={currentUser}
-          />
+  {shop.provider === currentUser ? (
+    // Render the Edit button only if the current user is the solution provider
+    <>
+      <button
+        className="btn btn-primary"
+        onClick={() => setShowSolutionModal(true)}
+      >
+        Edit
+      </button>
+      <SolutionForm
+        show={showSolutionModal}
+        onClose={() => setShowSolutionModal(false)}
+        shopName={name}
+        shopCatalogue={catalogue}
+        shopContacts={contacts}
+        address={location}
+        shopEmail={email}
+        shopDetails={providerComment.comment}
+        id={id}
+        currentUser={currentUser}
+        fullSoln={solution}
+      />
+    </>
+  ) : (
+    // Render the Flag button for other users
+    <>
+      <button
+        className="btn"
+        style={{
+          backgroundColor: shop.red_flags.includes(currentUser) ? 'red' : 'blue',
+          color: 'white',
+        }}
+        onClick={() => setShowModal(true)}
+      >
+        {shop.red_flags.includes(currentUser) ? 'Flagged' : 'Flag it'}
+      </button>
+      <ReviewModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        shop={shop}
+        currentUser={currentUser}
+      />
+    </>
+  )}
+</div>
 
-        </div>
         {/* <Link
           to="/SolutionAlternatives"
           className={`${main ? 'd-block' : 'd-none'}`}
@@ -101,12 +159,24 @@ function SolutionsDetailsCard({ solution, main }) {
             <p className="card-text">
               <strong>Catalogue:</strong> <a href={catalogue}>{catalogue}</a>
             </p>
-            <p className="card-text">
-              <strong>Contacts:</strong> {contacts}
-            </p>
-            <p className="card-text">
-              <strong>Email:</strong> {email}
-            </p>
+            {!showContacts ? (
+              <p style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+                className="card-text"
+                onClick={handleShowContacts}
+              >
+                See contacts and email
+              </p>
+            ) : (
+              <>
+                <p className="card-text">
+                  <strong>Contacts:</strong> {contacts}
+                </p>
+                <p className="card-text">
+                  <strong>Email:</strong> {email}
+                </p>
+              </>
+            )}
+            
             <p className="card-text">
               <strong>Comments:</strong>
             </p>
@@ -162,4 +232,4 @@ function SolutionsDetailsCard({ solution, main }) {
   );
 }
 
-export default SolutionsDetailsCard;
+export default SolutionsDetailsCard; 

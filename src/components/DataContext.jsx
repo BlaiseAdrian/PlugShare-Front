@@ -1,4 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { useDashboard } from '../hooks/useDashboard';
+import { useUser } from '../hooks/useUser';
 
 // Create a Context
 export const DataContext = createContext();
@@ -350,7 +352,7 @@ const shops = [
   {
     id: 6,
     name: "EcoBikes",
-    provider: "Victor",
+    provider: "currentUser",
     location: ["Jinja"],
     red_flags: ['Nancy'],
     contacts: "345678901",
@@ -360,7 +362,7 @@ const shops = [
     alternatives: [],
     endorsers: ["Olivia", "James"],
     comments: [
-      { comment: "Efficient and durable bikes", date: "06/06/23", owner: "Victor", agreements: ["Olivia", "James"] },
+      { comment: "Efficient and durable bikes", date: "06/06/23", owner: "currentUser", agreements: ["Olivia", "James"] },
       { comment: "Needs better customer service", date: "05/05/23", owner: "James", agreements: ["Victor"] }
     ]
   },
@@ -435,14 +437,15 @@ const shops = [
   }
 ];
 
+
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState(itemsArray);
   const [solutions, setSolutions] = useState(shops);
   const [feedback, setFeedback] = useState([]);
+  const [solnFeedback, setSolnFeedback] = useState([]);//{user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/11/11', name: 'Artisans Haven'}, {user: 'currentUser', date: '2024/06/12', name: 'Quality Home Furnishings'}]);
   const [needs, setNeeds] = useState(groupAndSortItems(data));
-  const [currentSoln, setCurrentSoln] = useState([]);
+  const [currentSoln, setCurrentSoln] = useState();
   const [currentSub, setCurrentSub] = useState();
-  const [user, setUser] = useState(users.find((person) => person.name === "Current User"));
 
   function groupAndSortItems(items) {
     // Step 1: Group items by sub_category and calculate owner counts
@@ -485,10 +488,45 @@ export const DataProvider = ({ children }) => {
   }, [data]); // Recompute needs whenever data changes
 
   // Add a function to update the array
-  const addItem = (item) => {
-    setData((prevData) => [...prevData, item]); // Append new needs
-  };
+  /*const addItem = (item, userId) => {
+    setData((prevData) => [...prevData, item]); 
+    const API = "https://api-plugshare.growthspringers.com";
+    //add item to the database using the above API. Include the necessary Params
+  };*/
 
+  const addItem = async (item, userId) => {
+    const API = "https://api-plugshare.growthspringers.com";//https://cors-anywhere.herokuapp.com/
+    try {
+      // Create a FormData object to handle the form data
+      const formData = new FormData();
+      formData.append('sub_category_id', item.sub_category_id); // Replace with actual value
+      formData.append('location', item.location);
+      formData.append('purpose', item.details);
+  
+      // Make POST request using fetch
+      const response = await fetch(`${API}/communityneeds?user_id=${userId}`, {
+        method: 'POST',
+        headers: {
+          Authorization: localStorage.getItem("jwt"),
+          // Do not include 'Content-Type' when using FormData; it sets the correct headers automatically
+        },
+        body: formData,
+      });
+      console.log(formData);
+      // Check if the response is OK (status 200-299)
+      if (response.ok) {
+        const responseData = await response.json(); // Parse JSON response
+        setData((prevData) => [...prevData, responseData]); // Update state
+        console.log('Item added successfully:', responseData);
+      } else {
+        console.error('Failed to add item. Status:', response.status, response.statusText);
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error('Error adding item:', error);
+    }
+  };
+  
   const updateSolution = (id, updatedSolution) => {
     setSolutions((prevSolutions) =>
       prevSolutions.map((solution) =>
@@ -507,25 +545,42 @@ export const DataProvider = ({ children }) => {
       setCurrentSub(subCategory); 
     };
 
+
   const addSolution = (solution) => {
     setSolutions((prevSolutions) => [...prevSolutions, solution]); // Append new solution
+    console.log(solution, 'no');
   };
 
   const addFeedback = (text) => {
     setFeedback((prevFeedback) => [...prevFeedback, text]);
-    console.log(feedback);
+    
   };
+
+  const forFeedback = (obj) => {
+    if (solnFeedback.some((soln) => soln.id === obj.id)) return; // Exit if id matches
+    setSolnFeedback((prevSolns) => [...prevSolns, obj]); // Add if not present
+  };  
+   
+
+  const removeForFeedback = (id) => {
+    setSolnFeedback((prevData) => prevData.filter((item) => item.id !== id));
+  };
+
 
   // Add a function to remove an item
   const removeItem = (id) => {
     setData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
+
+  const removeSoln = (id) => {
+    setSolutions((prevData) => prevData.filter((soln) => soln.id !== id));
+  };
+
   return (
     <DataContext.Provider
       value={{
         data,
-        user,
         needs,
         solutions,
         categories,
@@ -534,13 +589,17 @@ export const DataProvider = ({ children }) => {
         currentSoln,
         currentSub,
         feedback,
+        solnFeedback,
         addItem,
         removeItem,
         addSolution,
         updateCurrentSoln,
         updateCurrentSub,
         updateSolution,
-        addFeedback
+        addFeedback,
+        forFeedback,
+        removeForFeedback,
+        removeSoln,
       }}
     >
       {children}

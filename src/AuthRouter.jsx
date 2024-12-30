@@ -8,7 +8,7 @@ function AuthRouter(){
       <Routes>
         <Route path="/signin" element = {<SignIn/>} />
         <Route path="/signup" element = {<SignUp/>} />
-        <Route path="*" element = {<SignIn/>} />
+        <Route path="/" element = {<SignIn/>} />
       </Routes>
     </Router>
   )

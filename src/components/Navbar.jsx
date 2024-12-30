@@ -1,129 +1,3 @@
-// src/components/Navbar.js
-/*import React from 'react';
-
-function Navbar() {
-    return (
-        <nav className="navbar navbar-light bg-light px-3">
-            <span className="navbar-text mb-0 fst-italic h6">Community Plugs</span>
-      <NavLink to="/personal-list" activeClassName="active">Personal List</NavLink>
-      <NavLink to="/faq" activeClassName="active">FAQs</NavLink>
-        </nav>
-    );
-}
-
-export default Navbar;
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-
-function Navbar() {
-  const location = useLocation();
-  return (
-    <nav className="navbar navbar-light bg-light px-3">
-      <span className="navbar-text mb-0 fst-italic h6">{location.pathname}</span>
-      <span className="navbar-brand fw-bold">PlugShare</span>
-    </nav>
-  );
-}
-
-export default Navbar;
-
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import SideNav from './SideNav';
-
-function NavBar() {
-
-    const location = useLocation();
-
-    return (
-        <header>
-            <nav className="navbar navbar-light bg-light mb-3">
-                <div className="container-fluid">   
-                    <span className="navbar-text mb-0 fst-italic h6">{location.pathname}</span>
-                    <span className="navbar-brand fw-bold">PlugShare</span>    
-                </div>
-            </nav>
-        </header>
-    );
-}
-
-export default NavBar;
-
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-function Navbar() {
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    // State to store the page titles
-    const [prevPage, setPrevPage] = useState(null);
-    const [currentPage, setCurrentPage] = useState('Main Page');
-
-    // Define main pages that appear in the side navigation
-    const mainPages = {
-        '/': 'Community Needs',
-        '/community-plugs': 'Community Plugs',
-        '/personal-list': 'Personal List',
-        '/faqs': 'FAQs',
-    };
-
-    useEffect(() => {
-        // Check if the current page is a main page or a subpage
-        const isMainPage = mainPages.hasOwnProperty(location.pathname);
-        
-        if (isMainPage) {
-            // On a main page, only show the current page
-            setPrevPage(null);
-            setCurrentPage(mainPages[location.pathname]);
-        } else {
-            // On a subpage, set the main page as previous and show the subpage name as current
-            const mainPagePath = Object.keys(mainPages).find(path => location.pathname.startsWith(path));
-            setPrevPage(mainPagePath ? mainPages[mainPagePath] : null);
-            
-            // Customize subpage names based on pathname (example: for dynamic routes)
-            const pageNames = {     
-                '/NeedsDetails': 'Details',        
-                '/SolutionsDetails': ' Solution Details',      
-                '/Solutions': 'Solutions',
-            };
-            
-            setCurrentPage(pageNames[location.pathname] || 'Subpage');
-        }
-    }, [location.pathname]); // Run this effect whenever the route changes
-
-    return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
-                <span className="navbar-brand">My App</span>
-                
-                <div className="navbar-nav ms-auto">
-                    {prevPage && (
-                        <Link to="/" className="nav-link" onClick={() => navigate(-1)}>
-                            {prevPage}
-                        </Link>
-                    )}
-                    
-                    <span className="nav-link active" aria-current="page">
-                        {currentPage}
-                    </span>
-                </div>
-            </div>
-        </nav>
-    );
-}
-    
-            <span className="navbar-text mb-0 fst-italic h6 me-3" aria-current="page">
-            {breadcrumb.parent && (
-                <Link to={breadcrumb.parent.path} className="nav-link">
-                {breadcrumb.parent.name}
-                </Link>
-            )}
-            </span>
-
-export default Navbar;*/
-
-
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SideNav from './SideNav';
@@ -148,7 +22,7 @@ function Navbar({toggleSideNav, page = 'try', state}) {
         '/AlternativesDetails': { name: 'Details', parent: '/SolutionAlternatives' },
         '/PlugDetails': { name: 'Plug Details', parent: '/Plugs' }, 
         '/SolutionsDetails':  {
-            name: 'Solution Details',
+            name: 'Details',
             parents: ['/Solutions', '/community-plugs'], // Multiple possible parents
         }, 
         '/PersonalNeedsDetails': {
@@ -219,7 +93,7 @@ function Navbar({toggleSideNav, page = 'try', state}) {
     return (
         <nav className="navbar mb-3 navbar-light">
         <button
-        className={`navbar-toggler d-lg-none px-3`}
+        className={`navbar-toggler d-lg-none px-3 me-3`}
                         type="button"
                         onClick={toggleSideNav}
                         aria-label="Toggle sidebar"
@@ -233,7 +107,7 @@ function Navbar({toggleSideNav, page = 'try', state}) {
                 </Link>
             )}
 
-            <span className="navbar-text mb-0 me-2 fst-italic h6 ps-3" aria-current="page">
+            <span className="navbar-text mb-0 fst-italic h6" aria-current="page">
             {breadcrumb.current.name}
             </span>
         </div>
