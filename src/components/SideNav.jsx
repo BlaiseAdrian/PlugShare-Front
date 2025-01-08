@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faHeart, faQuestionCircle, faStar, faAward, faBullhorn, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import '../SideNav.css';
 import { DataContext } from './DataContext';
 import { useUser } from '../hooks/useUser';
@@ -12,13 +12,9 @@ import { useDashboard } from '../hooks/useDashboard';
 function SideNav({ isOpen, toggleSideNav }) {
     const location = useLocation();
 
-    const { user } = useContext(DataContext);
-
-    const {stars, handshakes, name} = user;
     const {setUser} = useUser()
     const { dashboard, setDashboard } = useDashboard()
-
-    const profile = dashboard.profile
+    const {stars, handshakes, user_name} = dashboard.profile;
 
     function signout(){
       setUser(null)
@@ -37,7 +33,7 @@ function SideNav({ isOpen, toggleSideNav }) {
                         <div className="d-flex align-items-center mb-3">
                             <img src="https://via.placeholder.com/50" alt="Profile" className="profile-pic rounded-circle me-3" />
                             <div className="flex-grow-1">
-                                <h6 className="profile-name mb-0"> {name} </h6>
+                                <h6 className="profile-name mb-0"> {user_name} </h6>
                             </div>
                             <FontAwesomeIcon icon={faEdit} className="text-muted edit-icon" />
                         </div>
@@ -75,7 +71,7 @@ function SideNav({ isOpen, toggleSideNav }) {
                             Leader Board
                         </Link>
                         <Link to="/MyEndorsements" className={`nav-link ${location.pathname === '/MyEndorsements' ? 'active' : ''}`}>
-                            <FontAwesomeIcon icon={faHandsHelping} className="fa-fw me-3 pe-4"/>
+                            <FontAwesomeIcon icon={faBullhorn} className="fa-fw me-3 pe-4"/>
                             My Endorsements
                         </Link>
                         <Link to="/faqs" className={`nav-link ${location.pathname === '/faqs' ? 'active' : ''}`}>

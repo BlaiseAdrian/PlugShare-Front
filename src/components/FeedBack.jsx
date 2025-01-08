@@ -43,6 +43,7 @@ function FeedBackForm({ show, onClose, currentUser }) {
                                 <label className="form-label">Type your feedback below:</label>
                                 <textarea
                                     className="form-control"
+                                    required
                                     rows="3"
                                     value={feedback}
                                     onChange={(e) => setFeedback(e.target.value)}

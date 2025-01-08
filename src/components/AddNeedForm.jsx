@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { DataContext } from './DataContext';
 
-function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l_ocation = '', d_etails = '' }) {
+function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', sub_category = '', l_ocation = '', d_etails = '' }) {
     const { addItem, data, removeItem, categories, subCategories, locations } = useContext(DataContext);
 
     const [category, setCategory] = useState(c_ategory);
@@ -66,7 +66,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const currentUser = "Current User"; // Replace with actual current user logic
+        const currentUser = userId; // Replace with actual current user logic
 
         const isUnchanged =
         category === c_ategory &&
@@ -93,7 +93,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                     addItem({
                         ...existingItem,
                         owner: [...existingItem.owner, currentUser], // Create a new array for owners
-                      });
+                      }, userId);
                 }
                 setStatusMessage("Item successfully added to your personal list!"); // Success message
                 return;
@@ -103,13 +103,15 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
         // Add a new item
         const newNeed = {
             id: Date.now(),
-            owner: [currentUser],
+            owner: [currentUser, currentUser],
             sub_category: subCategory,
             location: location,
             details: details,
         };
-
-        addItem(newNeed);
+        if (id && edit) {
+            removeItem(id);
+        }
+        addItem(newNeed, userId);
         setStatusMessage("Item successfully added to your personal list!"); // Success message
     };
     
@@ -135,7 +137,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                     ) : (
                         <>
                             <div className="modal-header">
-                                <h5 className="modal-title">Add to Personal List</h5>
+                                <h5 className="modal-title">Add Your Requirements</h5>
                                 <button type="button" className="btn-close" onClick={onClose}></button>
                             </div>
                             <div className="modal-body">
@@ -146,6 +148,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                                         <input
                                             type="text"
                                             className="form-control"
+                                            required
                                             value={categorySearch}
                                             onChange={(e) => {
                                                 setCategorySearch(e.target.value);
@@ -172,6 +175,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                                         <input
                                             type="text"
                                             className="form-control"
+                                            required
                                             value={subCategorySearch}
                                             onChange={(e) => {
                                                 setSubCategorySearch(e.target.value);
@@ -199,6 +203,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                                         <input
                                             type="text"
                                             className="form-control"
+                                            required
                                             value={locationSearch}
                                             onChange={(e) => {
                                                 setLocationSearch(e.target.value);
@@ -226,6 +231,7 @@ function NeedForm({ show, onClose, id = '', c_ategory = '', sub_category = '', l
                                             className="form-control"
                                             rows="3"
                                             value={details}
+                                            required
                                             onChange={(e) => setDetails(e.target.value)}
                                         ></textarea>
                                     </div>

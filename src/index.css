@@ -166,3 +166,9 @@
 .alert-heading{
   font-size: 19px;
 }
+
+.feedback-button {
+border-radius: 5px;
+font-size: small;
+margin-right: 0.8rem;
+}

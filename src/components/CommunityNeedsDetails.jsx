@@ -65,8 +65,26 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
         return grouped;
       };
       
-      const groupedNeeds = groupAndSortNeeds(data);  
-      const [items, setItems] = useState(subCategoryData.items);
+      const groupedNeeds = groupAndSortNeeds(data); 
+
+// Step 1: Count the frequency of each location
+const locationFrequency = subCategoryData.items.reduce((freq, item) => {
+  freq[item.location] = (freq[item.location] || 0) + 1;
+  return freq;
+}, {});
+
+// Step 2: Sort the array based on the frequency of the location
+const sortedItems = subCategoryData.items.sort((a, b) => {
+  const freqA = locationFrequency[a.location];
+  const freqB = locationFrequency[b.location];
+  
+  // Higher frequency comes first
+  if (freqA !== freqB) return freqB - freqA;
+
+  // Optionally, sort alphabetically by location if frequencies are equal
+  return a.location.localeCompare(b.location);
+});       
+      const [items, setItems] = useState(sortedItems);
 
         // Update items whenever data changes
   useEffect(() => {
@@ -77,7 +95,7 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
         <div>      
             <h4 className='ms-3 mb-4'>{subCategoryData.sub_category}</h4>
             <div className="d-flex justify-content-between mb-2">          
-            <button className="btn btn-primary ms-3 mb-1" onClick={() => setShowSolutionModal(true)}>Add Solution</button>
+            <button className="btn btn-primary ms-3 mb-1" onClick={() => setShowSolutionModal(true)}>Suggest a Plug</button>
             <SolutionForm
             show={showSolutionModal}
             onClose={() => setShowSolutionModal(false)}
@@ -86,12 +104,13 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
             currentUser={ 'Current User'}
             />
                                 <Link to="/Solutions" state = {subCategoryData}>
-                    <button className="btn btn-primary me-3"> See Solutions<sup class="top-right">{shopSolutions}</sup>
+                    <button className="btn btn-primary me-3"> Shared Plugs<sup class="top-right">{shopSolutions}</sup>
                     </button>
                     </Link>
             </div>       
             <div>
             <hr className='mx-3'/>
+            <h4 className='ms-2 mb-2' style={{ fontWeight: 'bold' }}>What people want;</h4>
                 <div className="d-flex justify-content-between align-items-center">
                 </div>
                 <div className='overflow-auto' style={{ maxHeight: "55vh" }}>
@@ -102,7 +121,7 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
 
     return (
       <div key={idx}>
-        {showLocation && <h5 className="ms-3">{need.location}</h5>}
+        {showLocation && <h5 className="ms-3">In {need.location};</h5>}
         <NeedsDetailsCard need={need} />
       </div>
     );
