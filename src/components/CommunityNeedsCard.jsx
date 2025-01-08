@@ -67,11 +67,11 @@ function CommunityNeedsCard({ sub_category }) {
                 </p>
                 <div className="d-flex justify-content-between align-items-center">
                     <Link to="/CommunityNeedsDetails" state={{ subCategory: currentSubCategory }}>
-                        See Specific Needs...
+                        See People's requirements...
                     </Link>
                     <Link to="/Solutions" state={currentSubCategory}>
                         <button className="btn btn-primary">
-                            Solutions<sup className="top-right">{shopSolutions}</sup>
+                            Plugs<sup className="top-right">{shopSolutions}</sup>
                         </button>
                     </Link>
                 </div>

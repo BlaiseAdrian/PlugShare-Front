@@ -2,19 +2,19 @@ import React, { useContext, useState } from 'react';
 import { DataContext } from './DataContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function SolutionForm({ show, onClose, address = '', title = '', currentUser }) {
-    const [name, setName] = useState('');
-    const [contacts, setContacts] = useState('');
-    const [email, setEmail] = useState('');    
-    const [location, setLocation] = useState(address);
-    const [catalogue, setCatalogue] = useState('');
-    const [details, setDetails] = useState('');
-    const [locationSearch, setLocationSearch] = useState(address);
+function SolutionForm({ show, onClose, edit = '', fullSoln, id = '', shopName = '', shopDetails = '', shopContacts = '', shopEmail = '', shopCatalogue = '', address = '', title = '', currentUser }) {
+    const [name, setName] = useState(shopName);
+    const [contacts, setContacts] = useState(shopContacts);
+    const [email, setEmail] = useState(shopEmail);    
+    const [location, setLocation] = useState('');
+    const [catalogue, setCatalogue] = useState(shopCatalogue);
+    const [details, setDetails] = useState(shopDetails);
+    const [locationSearch, setLocationSearch] = useState('');
 
     
     const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
-    const { addSolution, locations } = useContext(DataContext);
+    const { addSolution, locations, removeSoln } = useContext(DataContext);
 
     const filteredLocations = locations.filter((loc) =>
         loc.toLowerCase().includes(locationSearch.toLowerCase())
@@ -28,6 +28,37 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const isUnchanged =
+        name === shopName  &&
+        catalogue === shopCatalogue &&
+        contacts === shopContacts &&
+        email === shopEmail &&
+        location === address &&
+        details === shopDetails;
+
+
+        if (id && isUnchanged) return;
+        
+        if (id) {
+            const updatedSoln = {
+                ...fullSoln,
+                name: name,
+                location: location,
+                email: email,
+                provider: currentUser,
+                catalogue: catalogue,
+                contacts: contacts,
+                comments: [//Deal with updated descriptions
+                    { comment: details ? details: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
+                  ]
+            }
+            removeSoln(id);
+            addSolution(updatedSoln); // Add solution to context
+            onClose(); // Close the modal after submission
+            return;
+        }
+
         const newSolution = {
             id: Date.now(),
             name: name,
@@ -41,11 +72,12 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
             alternatives: [],
             endorsers: [],
             comments: [
-                { comment: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
+                { comment: details ? details: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
               ]
         };
 
-        console.log('New Solution:', newSolution); // Debugging log
+console.log(newSolution);
+
         addSolution(newSolution); // Add solution to context
         onClose(); // Close the modal after submission
     };
@@ -55,7 +87,7 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Add a Solution</h5>
+                        <h5 className="modal-title">Share your Plug</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
@@ -66,6 +98,7 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
                                 <input
                                     type="text"
                                     className="form-control"
+                                    required
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 />
@@ -78,6 +111,7 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
                                             type="text"
                                             className="form-control"
                                             value={locationSearch}
+                                            required
                                             onChange={(e) => {
                                                 setLocationSearch(e.target.value);
                                                 setShowLocationDropdown(true);
@@ -103,6 +137,7 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
                                 <input
                                     type="text"
                                     className="form-control"
+                                    required
                                     value={contacts}
                                     onChange={(e) => setContacts(e.target.value)}
                                 />
@@ -125,6 +160,7 @@ function SolutionForm({ show, onClose, address = '', title = '', currentUser }) 
                                 <input
                                     type="text"
                                     className="form-control"
+                                    required
                                     value={catalogue}
                                     onChange={(e) => setCatalogue(e.target.value)}
                                 />
