@@ -31,8 +31,6 @@ const subCategories = [
   { category: 'Art', name: 'Local Art Pieces', description: 'Handcrafted art pieces, including paintings and carvings' }
 ];
 
-
-
 const locations = ['Kampala', 'Entebbe', 'Jinja', 'Mbale', 'Mukono'];
 
 const itemsArray = [
@@ -248,7 +246,6 @@ const itemsArray = [
   }
 ];
 
-
 const users = [
   {
     name: 'Current User',
@@ -437,13 +434,12 @@ const shops = [
   }
 ];
 
-
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState(itemsArray);
+  let [data, setData] = useState(itemsArray);
   const [solutions, setSolutions] = useState(shops);
   const [feedback, setFeedback] = useState([]);
   const [solnFeedback, setSolnFeedback] = useState([]);//{user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/12/10', name: 'FitLife Store'}, {user: 'currentUser', date: '2024/11/11', name: 'Artisans Haven'}, {user: 'currentUser', date: '2024/06/12', name: 'Quality Home Furnishings'}]);
-  const [needs, setNeeds] = useState(groupAndSortItems(data));
+  let needs = groupAndSortItems(data);
   const [currentSoln, setCurrentSoln] = useState();
   const [currentSub, setCurrentSub] = useState();
 
@@ -480,12 +476,6 @@ export const DataProvider = ({ children }) => {
 
     return sortedSubcategories;
   }
-
-  // Update needs whenever data changes
-  useEffect(() => {
-    const groupedNeeds = groupAndSortItems(data);
-    setNeeds(groupedNeeds);
-  }, [data]); // Recompute needs whenever data changes
 
   // Add a function to update the array
   /*const addItem = (item, userId) => {
@@ -577,11 +567,13 @@ export const DataProvider = ({ children }) => {
     setSolutions((prevData) => prevData.filter((soln) => soln.id !== id));
   };
 
+
   return (
     <DataContext.Provider
       value={{
-        data,
         needs,
+        data,
+        setData,
         solutions,
         categories,
         subCategories,
@@ -590,6 +582,7 @@ export const DataProvider = ({ children }) => {
         currentSub,
         feedback,
         solnFeedback,
+        setSolutions,
         addItem,
         removeItem,
         addSolution,
@@ -600,6 +593,7 @@ export const DataProvider = ({ children }) => {
         forFeedback,
         removeForFeedback,
         removeSoln,
+        setSolutions,
       }}
     >
       {children}

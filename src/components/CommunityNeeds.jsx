@@ -37,6 +37,7 @@ function useScrollRestoration(ref) {
 
 function CommunityNeeds() {
   const { needs, subCategories, locations } = useContext(DataContext);
+  console.log("c_needs", needs)
   const contextData = { subCategories, locations };
   const scrollContainerRef = useRef(null);
   const [filteredItems, setFilteredItems] = useState(needs);

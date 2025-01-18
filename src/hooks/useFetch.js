@@ -29,6 +29,7 @@ export function useFetch(url, onSuccess = ()=>{}){
     } catch(err){
       setError(err)
       setData(null)
+      console.log(err)
     }
     setIsloading(false)
   }

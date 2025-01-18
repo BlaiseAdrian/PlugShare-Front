@@ -6,18 +6,17 @@ import NeedForm from './AddNeedForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faQuestionCircle, faStar, faAward, faSignOutAlt, faEdit, faHandshake, faHandsHelping, faLightbulb, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { DataContext } from './DataContext';
-import { useUser } from '../hooks/useUser';
 import { useDashboard } from '../hooks/useDashboard';
 
 
 function NeedsDetailsCard({ need }) { 
-    const { data, subCategories } = useContext(DataContext);
-    const needData = data.find((item) => item.id === need.id);
-    console.log(needData)
+  console.log("need prop",need)
+    const { needs, subCategories } = useContext(DataContext);
+    const needData = needs.find((item) => item.id === need.id);
+    console.log("need-data", needData)
     const { sub_category, location, owner, details, id } = needData;
     const [showNeedsModal, setShowNeedsModal] =useState(false);   
-  const {setUser} = useUser()
-  const { dashboard, setDashboard } = useDashboard()
+  const { dashboard} = useDashboard()
   const {_id} = dashboard.profile;
     const getCategoryForSubCategory = (subCategoryName) => {
         const match = subCategories.find((subCat) => subCat.name === subCategoryName);

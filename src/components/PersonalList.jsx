@@ -1,30 +1,22 @@
 import React, { useContext, useState } from 'react';
 import NeedsCard from './PersonalNeedsCard';
 import NeedForm from './AddNeedForm';
-import { useLocation } from 'react-router-dom';
 import { DataContext } from './DataContext';
 import PersonalNeedsCard from './PersonalNeedsCard';
 import SolutionFeedbackForm from './SolutionFeedbackForm';
-import { useUser } from '../hooks/useUser';
 import { useDashboard } from '../hooks/useDashboard';
 
 function PersonalList() {
   const { data} = useContext(DataContext);
+  console.log("data", data)
   
-  const items = data.filter((need) => need.owner.includes("Current User"));
   const [showModal, setShowModal] =useState(false);
   const [showFeedbackModal, setShowFeedbackModal] =useState(false);
-  const n = items.length;
-  const {setUser} = useUser()
-  const { dashboard, setDashboard } = useDashboard()
-  const {_id} = dashboard.profile;
 
-  function signout(){
-    setUser(null)
-    setDashboard(null)
-    localStorage.removeItem("user")
-    localStorage.removeItem("jwt")
-  }
+  const { dashboard } = useDashboard()
+  const {_id, needs:items} = dashboard.profile;
+  const n = items.length;
+  
 
   return (
     <div> 

@@ -11,9 +11,9 @@ function CommunityNeedsDetails() {
   const { state } = location; // Extract state from location
   const {subCategory}  = state;
    
-    const [showSolutionModal, setShowSolutionModal] =useState(false);
+  const [showSolutionModal, setShowSolutionModal] =useState(false);
     
-  const { data, needs, solutions, updateCurrentSub } = useContext(DataContext);
+  const { needs, solutions, updateCurrentSub } = useContext(DataContext);
   
   const subCategoryData = needs.find((subCat) => subCat.sub_category === subCategory.sub_category);
 
@@ -45,9 +45,9 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
   }
   
 
-  const sortedLocations = getSortedLocationsForSubcategory(subCategoryData);
+//const sortedLocations = getSortedLocationsForSubcategory(subCategoryData);
 
-    const groupAndSortNeeds = (needs) => {
+  const groupAndSortNeeds = (needs) => {
         // Group by need
         const grouped = needs.reduce((acc, need) => {
           if (!acc[need.location]) {
@@ -65,7 +65,7 @@ const shopSolutions = getSolutions(solutions, subCategoryData.sub_category);
         return grouped;
       };
       
-      const groupedNeeds = groupAndSortNeeds(data); 
+ //const groupedNeeds = groupAndSortNeeds(needs); 
 
 // Step 1: Count the frequency of each location
 const locationFrequency = subCategoryData.items.reduce((freq, item) => {
@@ -74,17 +74,20 @@ const locationFrequency = subCategoryData.items.reduce((freq, item) => {
 }, {});
 
 // Step 2: Sort the array based on the frequency of the location
-const sortedItems = subCategoryData.items.sort((a, b) => {
-  const freqA = locationFrequency[a.location];
-  const freqB = locationFrequency[b.location];
+// let sortedItems = subCategoryData.items.sort((a, b) => {
+//   console.log(a, b)
+//   const freqA = locationFrequency[a.location];
+//   const freqB = locationFrequency[b.location];
   
-  // Higher frequency comes first
-  if (freqA !== freqB) return freqB - freqA;
+//   // Higher frequency comes first
+//   if (freqA !== freqB) return freqB - freqA;
 
-  // Optionally, sort alphabetically by location if frequencies are equal
-  return a.location.localeCompare(b.location);
-});       
-      const [items, setItems] = useState(sortedItems);
+//   // Optionally, sort alphabetically by location if frequencies are equal
+//   return a.location.localeCompare(b.location);
+// });
+
+let sortedItems = subCategoryData.items
+const [items, setItems] = useState(sortedItems);
 
         // Update items whenever data changes
   useEffect(() => {
