@@ -1,19 +1,16 @@
 import { Spinner, Alert } from "react-bootstrap"
 
 
-export function FormErrorAlert({errorTitle, msg, setError}){
+export function FormSuccessAlert({msg, setData}){
   return(
     <div className = {`form-error-backdrop px-3`} >
       <Alert
-        variant="danger"
-        onClose = {() => setError(null)}
+        variant="success"
+        onClose = {() => setData(null)}
         dismissible
         className = {`form-error-content shadow-lg px-3`}
       >
-        <Alert.Heading className="mb-3"> {errorTitle} </Alert.Heading>
-        <p>
-          { msg }
-        </p>
+        <Alert.Heading className="mb-3 fw-bold"> {msg} </Alert.Heading>
       </Alert>
     </div>
 

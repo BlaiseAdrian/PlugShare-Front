@@ -1,5 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { DataContext } from './DataContext';
+import { useSubmitForm } from '../hooks/useSubmitForm';
+import { FormLoader } from './FormLoader';
+import { FormErrorAlert } from './FormErrorAlert';
+import { FormSuccessAlert } from './FormSuccessAlert';
+import { useUser } from '../hooks/useUser';
 
 function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', sub_category = '', l_ocation = '', d_etails = '' }) {
     const { addItem, data, removeItem, categories, subCategories, locations } = useContext(DataContext);
@@ -17,6 +22,21 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const [showSubCategoryDropdown, setShowSubCategoryDropdown] = useState(false);
     const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+    const API = "https://api-plugshare.growthspringers.com"
+    const {user} = useUser()
+    const {
+      isLoading,
+      error,
+      setError,
+      data:dataFeedback,
+      setData,
+      handleSubmit
+    } = useSubmitForm({url: `${API}/communityneeds?user_id=${user}` })
+
+    console.log(isLoading)
+    console.log(error)
+    console.log(dataFeedback)
 
     // Filter logic for dropdowns
     const filteredCategories = categories.filter((cat) =>
@@ -63,62 +83,73 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
         }
     }, [show, c_ategory, sub_category, l_ocation]);
     
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
 
-        const currentUser = userId; // Replace with actual current user logic
+    //     const currentUser = userId; // Replace with actual current user logic
 
-        const isUnchanged =
-        category === c_ategory &&
-        subCategory === sub_category &&
-        location === l_ocation &&
-        details === d_etails;
+    //     const isUnchanged =
+    //     category === c_ategory &&
+    //     subCategory === sub_category &&
+    //     location === l_ocation &&
+    //     details === d_etails;
 
-        // Check user limit
-        const userOwnedItemsCount = Array.isArray(data)
-            ? data.filter((item) => item.owner.includes(currentUser)).length
-            : 0;
+    //     // Check user limit
+    //     const userOwnedItemsCount = Array.isArray(data)
+    //         ? data.filter((item) => item.owner.includes(currentUser)).length
+    //         : 0;
 
-        if (userOwnedItemsCount >= 3) {
-            setStatusMessage("You have exceeded the current limit of items you can submit (3)."); // Set failed message
-            return;
-        }
+    //     if (userOwnedItemsCount >= 3) {
+    //         setStatusMessage("You have exceeded the current limit of items you can submit (3)."); // Set failed message
+    //         return;
+    //     }
 
-        if (id && isUnchanged) {
-            const existingItem = Array.isArray(data) ? data.find((item) => item.id === id) : null;
+    //     if (id && isUnchanged) {
+    //         const existingItem = Array.isArray(data) ? data.find((item) => item.id === id) : null;
 
-            if (existingItem) {
-                if (!existingItem.owner.includes(currentUser)) {
-                    removeItem(existingItem.id);
-                    addItem({
-                        ...existingItem,
-                        owner: [...existingItem.owner, currentUser], // Create a new array for owners
-                      }, userId);
-                }
-                setStatusMessage("Item successfully added to your personal list!"); // Success message
-                return;
-            }
-        }
+    //         if (existingItem) {
+    //             if (!existingItem.owner.includes(currentUser)) {
+    //                 removeItem(existingItem.id);
+    //                 addItem({
+    //                     ...existingItem,
+    //                     owner: [...existingItem.owner, currentUser], // Create a new array for owners
+    //                   }, userId);
+    //             }
+    //             setStatusMessage("Item successfully added to your personal list!"); // Success message
+    //             return;
+    //         }
+    //     }
 
-        // Add a new item
-        const newNeed = {
-            id: Date.now(),
-            owner: [currentUser, currentUser],
-            sub_category: subCategory,
-            location: location,
-            details: details,
-        };
-        if (id && edit) {
-            removeItem(id);
-        }
-        addItem(newNeed, userId);
-        setStatusMessage("Item successfully added to your personal list!"); // Success message
-    };
+    //     // Add a new item
+    //     const newNeed = {
+    //         id: Date.now(),
+    //         owner: [currentUser, currentUser],
+    //         sub_category: subCategory,
+    //         location: location,
+    //         details: details,
+    //     };
+    //     if (id && edit) {
+    //         removeItem(id);
+    //     }
+    //     addItem(newNeed, userId);
+    //     setStatusMessage("Item successfully added to your personal list!"); // Success message
+    // };
     
     return (
         <div className={`modal ${show ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          
             <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
+            { isLoading && <FormLoader text="Adding need ..." />}
+                                    { dataFeedback && <FormSuccessAlert setData={setData} msg = {dataFeedback.message} /> }
+                                    { 
+                                      error &&
+                                      <FormErrorAlert
+                                        errorTitle="Failed to add need"
+                                        msg = {error.message}
+                                        setError={setError}
+                                      />
+                                    }
                     {statusMessage ? (
                         // Status Message (either success or failure)
                         <div className="modal-body text-center">
@@ -143,12 +174,14 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                             <div className="modal-body">
                                 <form onSubmit={handleSubmit}>
                                     {/* Category Autocomplete */}
+
                                     <div className="mb-3 position-relative">
                                         <label className="form-label">Category:</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             required
+                                            name='category'
                                             value={categorySearch}
                                             onChange={(e) => {
                                                 setCategorySearch(e.target.value);
@@ -176,6 +209,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                             type="text"
                                             className="form-control"
                                             required
+                                            name='sub_category'
                                             value={subCategorySearch}
                                             onChange={(e) => {
                                                 setSubCategorySearch(e.target.value);
@@ -204,6 +238,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                             type="text"
                                             className="form-control"
                                             required
+                                            name='location'
                                             value={locationSearch}
                                             onChange={(e) => {
                                                 setLocationSearch(e.target.value);
@@ -228,6 +263,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                     <div className="mb-3">
                                         <label className="form-label">Details:</label>
                                         <textarea
+                                            name='purpose'
                                             className="form-control"
                                             rows="3"
                                             value={details}
@@ -241,7 +277,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                         <button type="button" className="btn btn-secondary" onClick={onClose}>
                                             Discard
                                         </button>
-                                        <button type="submit" className="btn btn-primary">
+                                        <button disabled = {isLoading} type="submit" className="btn btn-primary">
                                             Submit
                                         </button>
                                     </div>
