@@ -7,11 +7,8 @@ import { LoadDashboard } from "./components/LoadDashboard";
 function App(){
   const { user } = useUser()
   const {dashboard} = useDashboard()
-  const dashboardLoaded = dashboard?.profile && dashboard?.needs && dashboard?.solutions
 
-  console.log("app", dashboard)
-
-  return user? (dashboardLoaded? <DashboardRouter/> : <LoadDashboard/>)  : <AuthRouter/>
+  return user? (dashboard? <DashboardRouter/> : <LoadDashboard/>)  : <AuthRouter/>
 }
 
 export default App
