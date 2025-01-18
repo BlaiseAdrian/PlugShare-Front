@@ -63,7 +63,7 @@ function DashboardRouter() {
                 <Route path="/SolutionAlternatives" element={<SolutionAlternatives/>} />
                 <Route path="/AlternativesDetails" element={<AlternativesDetails/>} />
                 <Route path="/CommunityNeedsDetails" element={<CommunityNeedsDetails/>} />
-                <Route path="/*" element = {<Navigate to = {"/"} />} />
+                <Route path="*" element = {<Navigate to = {"/"} />} />
               </Routes>
                 </CSSTransition>
             </SwitchTransition>
