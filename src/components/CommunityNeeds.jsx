@@ -65,7 +65,7 @@ function CommunityNeeds() {
     console.log("Difference in milliseconds:", lastShown ? now - parseInt(lastShown, 10) : "No previous timestamp");
   
     // Show feedback form if not shown before or after 24 hours
-    if (!lastShown || now - parseInt(lastShown, 10) >= 24 * 60 * 60 * 1000) {
+    if (!lastShown || now - parseInt(lastShown, 10) >= 1000) {
       setShowFeedbackModal(true);
       localStorage.setItem("lastFeedbackShown", now); // Store the current timestamp
       console.log("Feedback form triggered, timestamp updated.");

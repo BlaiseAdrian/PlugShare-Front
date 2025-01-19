@@ -1,62 +1,42 @@
 import { Button, Alert, Spinner } from "react-bootstrap"
 import { useDashboard } from "../hooks/useDashboard"
-import { useFetch } from "../hooks/useFetch"
 import { useUser } from "../hooks/useUser"
-import { useRef } from "react"
+import { useFetchMultiple } from "../hooks/useFetchMultiple"
+import { useEffect } from "react"
 
 const API = "https://api-plugshare.growthspringers.com"
 
 
 export function LoadDashboard(){
 
-  const dataRef = useRef({})
-  const dashboard = dataRef.current
-
   const { setDashboard} = useDashboard()
   const {user} = useUser()
 
-  const {
-    isLoading: isLoadingProfile,
-    error: errorProfile,
-    fetchData: fetchProfile
-  } = useFetch(API + `/users?user_id=${user}`,  onSuccessProfile)
+  const endpoints = [
+    API + `/users?user_id=${user}`,
+    API + `/communityneeds`,
+    API + `/all_solutions`,
+    API + '/all_needs'
+  ]
 
   const {
-    isLoading: isLoadingNeeds,
-    error: errorNeeds,
-    fetchData: fetchNeeds
-  } = useFetch(API + `/communityneeds`, onSuccessNeeds)
+    isLoading,
+    error,
+    data,
+    retryFetch
+   } = useFetchMultiple(endpoints)
 
-  const {
-    isLoading: isLoadingSolutions,
-    error: errorSolutions,
-    fetchData: fetchSolutions
-  } = useFetch(API + `/all_solutions`, onSuccessSolutions)
-
-  const isLoading = isLoadingProfile || isLoadingNeeds  || isLoadingSolutions
-  const error = errorProfile || errorNeeds  || errorSolutions
-
-  function onSuccessProfile(data){
-    dashboard.profile = data
-    if (dashboard.profile && dashboard.needs && dashboard.solutions){
-      setDashboard(dashboard)
-    }
+  useEffect(()=> {
+  if (data) {
+    const [profile, needs, solutions, subcategories ] = data
+    setDashboard({
+      profile,
+      needs,
+      solutions,
+      subcategories,
+    })
   }
-
-  function onSuccessNeeds(data){
-    dashboard.needs = data
-    if (dashboard.profile && dashboard.needs && dashboard.solutions){
-      setDashboard(dashboard)
-    }
-   
-  }
-
-  function onSuccessSolutions(data){
-    dashboard.solutions = data 
-    if (dashboard.profile && dashboard.needs && dashboard.solutions){
-      setDashboard(dashboard)
-    }
-  }
+  }, [data])
   
   return(
     <div className="d-flex align-items-center justify-content-center" style={{height: "100vh"}} >
@@ -78,7 +58,7 @@ export function LoadDashboard(){
             <Button
               className="px-4"
               variant="primary"
-              onClick = { ()=>{ fetchProfile(), fetchNeeds(), fetchSolutions() } }
+              onClick = { retryFetch }
             >
               Retry
             </Button>

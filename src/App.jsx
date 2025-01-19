@@ -7,7 +7,7 @@ import { LoadDashboard } from "./components/LoadDashboard";
 function App(){
   const { user } = useUser()
   const {dashboard} = useDashboard()
-  console.log("app log", dashboard)
+  console.log("dashboard: ", dashboard)
 
   return user? (dashboard? <DashboardRouter/> : <LoadDashboard/>)  : <AuthRouter/>
 }
