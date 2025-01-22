@@ -10,6 +10,7 @@ export function useSubmitForm({url, method = "POST", onSuccess = ()=>{}}){
       setIsLoading(true)
       const form = e.target
       const formData = new FormData(form)
+      console.log("form Data", Object.fromEntries(formData.entries()) )
 
       try {
         const res = await fetch(url, {

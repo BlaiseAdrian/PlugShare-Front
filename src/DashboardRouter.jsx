@@ -21,6 +21,7 @@ import AlternativesDetails from './components/AlternativesDetails';
 import Plugs from './components/Plugs';
 import PlugDetails from './components/PlugDetails';
 import { DataContext } from './components/DataContext';
+import {Navigate} from "react-router-dom"
 
 function DashboardRouter() {
   const [isSideNavOpen, setSideNavOpen] = useState(false);
@@ -62,6 +63,7 @@ function DashboardRouter() {
                 <Route path="/SolutionAlternatives" element={<SolutionAlternatives/>} />
                 <Route path="/AlternativesDetails" element={<AlternativesDetails/>} />
                 <Route path="/CommunityNeedsDetails" element={<CommunityNeedsDetails/>} />
+                <Route path="*" element = {<Navigate to = {"/"} />} />
               </Routes>
                 </CSSTransition>
             </SwitchTransition>

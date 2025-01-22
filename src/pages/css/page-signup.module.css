@@ -7,10 +7,16 @@
   width: 350px;
   margin: 0 auto;
   background-color: white;
-  padding-bottom: 40px;
+  padding-bottom: 60px; 
   border-radius: 5px;
   overflow: hidden;
   position: relative;
+  animation: widen .5s ease-in-out forwards;
+}
+
+@keyframes widen {
+  from {transform:scale(0.7, 0.7); opacity: 0.8; }
+  to {transform:scaleZ(1, 1); opacity: 1;}
 }
 
 @media (min-width: 600px) {
