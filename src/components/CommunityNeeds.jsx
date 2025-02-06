@@ -3,6 +3,8 @@ import { DataContext } from "./DataContext";
 import Filter from './Filter';
 import CommunityNeedsCard from './CommunityNeedsCard';
 import SolutionFeedbackForm from './SolutionFeedbackForm';
+import NeedsDetailsCard from "./NeedsDetailsCard";
+import { useDashboard } from '../hooks/useDashboard';
 
 function useScrollRestoration(ref) {
   useEffect(() => {
@@ -36,16 +38,24 @@ function useScrollRestoration(ref) {
 
 
 function CommunityNeeds() {
-  const { needs, subCategories, locations } = useContext(DataContext);
+  const { data, needs, subCategories, locations } = useContext(DataContext);
+  const { dashboard, setDashboard } = useDashboard();
+  const items = [];
+  dashboard.needs.top_needs.forEach(element => {
+    element.needs.forEach(need => {
+      items.push(need);
+    });
+  });
+  //console.log(dashboard.solutions.all_solutions)
   const contextData = { subCategories, locations };
   const scrollContainerRef = useRef(null);
-  const [filteredItems, setFilteredItems] = useState(needs);
+  const [filteredItems, setFilteredItems] = useState(items);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   useScrollRestoration(scrollContainerRef, filteredItems);
 
-  useEffect(() => {
-    setFilteredItems((prevItems) => (prevItems !== needs ? needs : prevItems));
-  }, [needs]);
+  /*useEffect(() => {
+    setFilteredItems((prevItems) => (prevItems !== data ? data : prevItems));
+  }, [data]);*/
 
   const handleFilter = useCallback((filtered) => {
     setFilteredItems(filtered);
@@ -64,13 +74,13 @@ function CommunityNeeds() {
     console.log("Current timestamp:", now);
     console.log("Difference in milliseconds:", lastShown ? now - parseInt(lastShown, 10) : "No previous timestamp");
   
-    // Show feedback form if not shown before or after 24 hours
-    if (!lastShown || now - parseInt(lastShown, 10) >= 1000) {
+    // Show feedback form if not shown before or after 12 hours
+    if (!lastShown || now - parseInt(lastShown, 10) >= 24 * 60* 60 * 1000) {
       setShowFeedbackModal(true);
       localStorage.setItem("lastFeedbackShown", now); // Store the current timestamp
       console.log("Feedback form triggered, timestamp updated.");
     } else {
-      console.log("Feedback form not shown, within 24-hour window.");
+      console.log("Feedback form not shown, within 12-hour window.");
     }
   }, []);  
 
@@ -84,10 +94,9 @@ function CommunityNeeds() {
           currentUser={'Current User'}
         />
         <Filter
-          items={needs}
+          items={items}
           contextData={contextData}
           sortOptions={[
-            { label: 'Popularity', value: 'popularity' },
             { label: 'Subcategory', value: 'sub_category' },
             { label: 'Location', value: 'unique_locations' },
           ]}
@@ -97,7 +106,7 @@ function CommunityNeeds() {
       </div>
       <div ref={scrollContainerRef} key="scroll-container" className="overflow-auto" style={{ maxHeight: '75vh' }}>
         {filteredItems.map((item, index) => (
-          <CommunityNeedsCard key={index} sub_category={item} />
+          <NeedsDetailsCard need={item} />
         ))}
       </div>
     </div>

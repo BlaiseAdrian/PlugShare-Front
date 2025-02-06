@@ -5,9 +5,10 @@ import { FormLoader } from './FormLoader';
 import { FormErrorAlert } from './FormErrorAlert';
 import { FormSuccessAlert } from './FormSuccessAlert';
 import { useUser } from '../hooks/useUser';
+import { useDashboard } from '../hooks/useDashboard';
 
 function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', sub_category = '', l_ocation = '', d_etails = '' }) {
-    const { addItem, data, removeItem, categories, subCategories, locations } = useContext(DataContext);
+    const { addItem, data, removeItem, subCategories, locations } = useContext(DataContext);
 
     const [category, setCategory] = useState(c_ategory);
     const [subCategory, setSubCategory] = useState(sub_category);
@@ -18,6 +19,18 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
     const [categorySearch, setCategorySearch] = useState(c_ategory);
     const [subCategorySearch, setSubCategorySearch] = useState(sub_category);
     const [locationSearch, setLocationSearch] = useState(l_ocation);
+    const { dashboard, setDashboard } = useDashboard();
+    const subcategory_array = dashboard.subcategories.all_needs;
+    //console.log(subcategory_array)
+    
+    const categories = ['Automotive Products', 'Automotive Services', 'Baby Products', 'Beauty and Wellness Services', 'Beauty Products', 'Books and Stationery', 'Building Construction Services', 'Building Materials', 'Clothing and Accessories', 'Educational and Training Services', 'Electronics', 'Energy and Power Supplies', 'Environmental Services', 'Event Planning and Management Services', 'Financial and Accounting Services', 'Food and Beverages', 'Furniture', 'Health and Medical Services', 'Health and Personal Care', 'Hobbies and Crafts', 'Home Appliances', 'Home Decor', 'Home Maintenance and Repair Services', 'Industrial Equipment', 'IT and Tech Support Services', 'Legal and Paralegal Services', 'Marketing and Advertising Services', 'Musical Instruments', 'Office Supplies and Equipment', 'Personal Lifestyle Services', 'Pet Care Services', 'Pet Supplies', 'Real Estate and Property Services', 'Security and Protection Services', 'Sports and Outdoors', 'Tools and Hardware', 'Travel and Tourism Services']
+    const subcategories = [];
+    dashboard.subcategories.all_needs.forEach(element => {
+        const exists = subcategories.find(item => item === element.sub_categories);
+        if (!exists) {
+            subcategories.push(element.sub_categories);
+        }
+      });
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const [showSubCategoryDropdown, setShowSubCategoryDropdown] = useState(false);
@@ -34,21 +47,17 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
       handleSubmit
     } = useSubmitForm({url: `${API}/communityneeds?user_id=${user}` })
 
-    console.log(isLoading)
-    console.log(error)
-    console.log(dataFeedback)
-
     // Filter logic for dropdowns
     const filteredCategories = categories.filter((cat) =>
         cat.toLowerCase().includes(categorySearch.toLowerCase())
     );
 
-    const filteredSubCategories = subCategories
-        .filter((subCat) => subCat.category === category) // Match the selected category
+    const filteredSubCategories = subcategory_array
+        .filter((subCat) => subCat.categories === category) // Match the selected category
         .filter((subCat) =>
-            subCat.name.toLowerCase().includes(subCategorySearch.toLowerCase()) // Filter by search input
+            subCat.sub_categories.toLowerCase().includes(subCategorySearch.toLowerCase()) // Filter by search input
         );
-
+ 
     const filteredLocations = locations.filter((loc) =>
         loc.toLowerCase().includes(locationSearch.toLowerCase())
     );
@@ -63,11 +72,11 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
     };
 
     const handleSubCategorySelect = (subCat) => {
-        setSubCategory(subCat.name);
-        setSubCategorySearch(subCat.name);
+        setSubCategory(subCat._id);
+        setSubCategorySearch(subCat.sub_categories);
         setShowSubCategoryDropdown(false);
     };
-
+//console.log(subCategory);
     const handleLocationSelect = (loc) => {
         setLocation(loc);
         setLocationSearch(loc);
@@ -168,7 +177,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                     ) : (
                         <>
                             <div className="modal-header">
-                                <h5 className="modal-title">Add Your Requirements</h5>
+                                <h5 className="modal-title">Add to Your Requirements</h5>
                                 <button type="button" className="btn-close" onClick={onClose}></button>
                             </div>
                             <div className="modal-body">
@@ -192,7 +201,7 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                             placeholder="Search category"
                                         />
                                         {showCategoryDropdown && (
-                                            <ul className="dropdown-menu show" style={{ position: 'absolute', width: '100%' }}>
+                                            <ul className="dropdown-menu show overflow-auto" style={{ position: 'absolute', width: '100%', maxHeight: '50vh'  }}>
                                                 {filteredCategories.map((cat) => (
                                                     <li key={cat} onClick={() => handleCategorySelect(cat)}>
                                                         <button className="dropdown-item">{cat}</button>
@@ -209,7 +218,6 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                             type="text"
                                             className="form-control"
                                             required
-                                            name='sub_category'
                                             value={subCategorySearch}
                                             onChange={(e) => {
                                                 setSubCategorySearch(e.target.value);
@@ -220,11 +228,14 @@ function NeedForm({ show, onClose, userId, edit = '', id = '', c_ategory = '', s
                                             placeholder="Search sub-category"
                                             disabled={!category}
                                         />
+                                        {/* Hidden input to submit the _id */}
+                                        <input type="hidden" name="sub_category_id" value={subCategory} />
+                                        
                                         {showSubCategoryDropdown && (
-                                            <ul className="dropdown-menu show" style={{ position: 'absolute', width: '100%' }}>
+                                            <ul className="dropdown-menu show overflow-auto" style={{ position: 'absolute', width: '100%', maxHeight: '50vh' }}>
                                                 {filteredSubCategories.map((subCat) => (
-                                                    <li key={subCat.name} onClick={() => handleSubCategorySelect(subCat)}>
-                                                        <button className="dropdown-item">{subCat.name}</button>
+                                                    <li key={subCat._id} onClick={() => handleSubCategorySelect(subCat)}>
+                                                        <button className="dropdown-item">{subCat.sub_categories}</button>
                                                     </li>
                                                 ))}
                                             </ul>

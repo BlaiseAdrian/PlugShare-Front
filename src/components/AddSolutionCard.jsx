@@ -1,13 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { DataContext } from './DataContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSubmitForm } from '../hooks/useSubmitForm';
+import { FormLoader } from './FormLoader';
+import { FormErrorAlert } from './FormErrorAlert';
+import { FormSuccessAlert } from './FormSuccessAlert';
+import { useUser } from '../hooks/useUser';
+import { useDashboard } from '../hooks/useDashboard';
 
-function SolutionForm({ show, onClose, edit = '', fullSoln, id = '', shopName = '', shopDetails = '', shopContacts = '', shopEmail = '', shopCatalogue = '', address = '', title = '', currentUser }) {
-    const [name, setName] = useState(shopName);
-    const [contacts, setContacts] = useState(shopContacts);
+function SolutionForm({ show, onClose, edit = '', fullSoln, id = '', shopName = '', shopDetails = '', shopContacts = '', shopEmail = '', shopCatalogue = '', address = '', title = '', need_id, sub_category_id }) {
+    const [solution, setSolution] = useState(shopName);
+    const [phone_number, setPhone_number] = useState(shopContacts);
     const [email, setEmail] = useState(shopEmail);    
     const [location, setLocation] = useState('');
-    const [catalogue, setCatalogue] = useState(shopCatalogue);
+    const [link, setLink] = useState(shopCatalogue);
     const [details, setDetails] = useState(shopDetails);
     const [locationSearch, setLocationSearch] = useState('');
 
@@ -16,76 +22,42 @@ function SolutionForm({ show, onClose, edit = '', fullSoln, id = '', shopName = 
 
     const { addSolution, locations, removeSoln } = useContext(DataContext);
 
+    const API = "https://api-plugshare.growthspringers.com"
+    const {user} = useUser();
+    const {
+      isLoading,
+      error,
+      setError,
+      data:dataFeedback,
+      setData,
+      handleSubmit
+    } = useSubmitForm({url: `${API}/solutions?user_id=${user}&need_id=${need_id}&sub_category_id=${sub_category_id}` })
+
     const filteredLocations = locations.filter((loc) =>
         loc.toLowerCase().includes(locationSearch.toLowerCase())
     );
-
+    //console.log(`${API}/solutions?user_id=${user}&${need_id}&${sub_category_id}`)
     const handleLocationSelect = (loc) => {
         setLocation(loc);
         setLocationSearch(loc);
         setShowLocationDropdown(false);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const isUnchanged =
-        name === shopName  &&
-        catalogue === shopCatalogue &&
-        contacts === shopContacts &&
-        email === shopEmail &&
-        location === address &&
-        details === shopDetails;
-
-
-        if (id && isUnchanged) return;
-        
-        if (id) {
-            const updatedSoln = {
-                ...fullSoln,
-                name: name,
-                location: location,
-                email: email,
-                provider: currentUser,
-                catalogue: catalogue,
-                contacts: contacts,
-                comments: [//Deal with updated descriptions
-                    { comment: details ? details: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
-                  ]
-            }
-            removeSoln(id);
-            addSolution(updatedSoln); // Add solution to context
-            onClose(); // Close the modal after submission
-            return;
-        }
-
-        const newSolution = {
-            id: Date.now(),
-            name: name,
-            location: location,
-            email: email,
-            provider: currentUser,
-            catalogue: catalogue,
-            red_flags: [],
-            contacts: contacts,
-            subcategory: title,
-            alternatives: [],
-            endorsers: [],
-            comments: [
-                { comment: details ? details: 'Appreciate Me below', date: new Date().toISOString().split('T')[0], owner: currentUser, agreements: [] },
-              ]
-        };
-
-console.log(newSolution);
-
-        addSolution(newSolution); // Add solution to context
-        onClose(); // Close the modal after submission
-    };
 
     return (
         <div className={`modal ${show ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
+            { isLoading && <FormLoader text="Adding Solution ..." />}
+                                    { dataFeedback && <FormSuccessAlert setData={setData} msg = {dataFeedback.message} /> }
+                                    { 
+                                      error &&
+                                      <FormErrorAlert
+                                        errorTitle="Failed to add Solution"
+                                        msg = {error.message}
+                                        setError={setError}
+                                      />
+                                    }
                     <div className="modal-header">
                         <h5 className="modal-title">Share your Plug</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
@@ -98,9 +70,10 @@ console.log(newSolution);
                                 <input
                                     type="text"
                                     className="form-control"
+                                    name = 'solution'
                                     required
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    value={solution}
+                                    onChange={(e) => setSolution(e.target.value)}
                                 />
                             </div>
 
@@ -110,6 +83,7 @@ console.log(newSolution);
                                         <input
                                             type="text"
                                             className="form-control"
+                                            name = 'location'
                                             value={locationSearch}
                                             required
                                             onChange={(e) => {
@@ -137,9 +111,10 @@ console.log(newSolution);
                                 <input
                                     type="text"
                                     className="form-control"
+                                    name = 'phone_number'
                                     required
-                                    value={contacts}
-                                    onChange={(e) => setContacts(e.target.value)}
+                                    value={phone_number}
+                                    onChange={(e) => setPhone_number(e.target.value)}
                                 />
                             </div>
 
@@ -149,6 +124,7 @@ console.log(newSolution);
                                 <input
                                     type="text"
                                     className="form-control"
+                                    name = 'email'
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -160,9 +136,10 @@ console.log(newSolution);
                                 <input
                                     type="text"
                                     className="form-control"
+                                    name = 'link'
                                     required
-                                    value={catalogue}
-                                    onChange={(e) => setCatalogue(e.target.value)}
+                                    value={link}
+                                    onChange={(e) => setLink(e.target.value)}
                                 />
                             </div>                            
 
@@ -172,6 +149,7 @@ console.log(newSolution);
                                 <textarea
                                     className="form-control"
                                     rows="3"
+                                    name = 'details'
                                     value={details}
                                     onChange={(e) => setDetails(e.target.value)}
                                 ></textarea>

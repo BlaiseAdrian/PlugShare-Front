@@ -6,32 +6,29 @@ import CommentsCard from './Comments';
 import { DataContext } from './DataContext';
 import AddCommentModal from './AddCommentModal';
 import SolutionForm from './AddSolutionCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandshake } from '@fortawesome/free-solid-svg-icons';
 
 function SolutionsDetailsCard({ solution, main }) {
   const { solutions, updateSolution, forFeedback, updateCurrentSoln, currentSoln } = useContext(DataContext);
-  const [shop, setShop] = useState(solution || currentSoln || {});
-
+  
   updateCurrentSoln(solution);
   //console.log(shop, currentSoln);
   
-  const { name, location, red_flags, contacts, catalogue, email, comments, id, endorsers, provider } = shop;
+  const { business_name, location, flags, phone_number, handshakes, details, catalogue = '', email, comments = [], _id, endorsements, user_id } = solution;
   const [showModal, setShowModal] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
   const [showSolutionModal, setShowSolutionModal] =useState(false);
   const [showContacts, setShowContacts] = useState(false); // New state for contacts visibility
   const currentUser = 'currentUser';
-
+  const [isToggled, setIsToggled] = useState(handshakes.includes(currentUser));
   const [shouldAddFeedback, setShouldAddFeedback] = useState(false);
-
-  useEffect(() => {
-    setShop(solutions.find(shop => shop.id === solution.id));
-  }, [solutions, currentSoln]); // Recompute shop whenever data changes
 
 
   const handleShowContacts = () => {
     setShowContacts(true); // Show the contacts
     setShouldAddFeedback(true); // Trigger feedback addition in useEffect
-    addsolnFeedback(shop);
+    addsolnFeedback(solution);
   };  
 
   const [showAddCommentModal, setShowAddCommentModal] = useState(false);
@@ -49,19 +46,10 @@ function SolutionsDetailsCard({ solution, main }) {
       user: currentUser,
       id: soln.id,
       date: new Date().toISOString().split('T')[0], // Format: YYYY-MM-DD
-      name: soln.name,
+      name: soln.business_name,
     }
     forFeedback(text);
   };  
-
-  const getAlternatives = (shops, solutionId) => {
-    const solution = shops.find(shop => shop.id === solutionId);
-    return solution && solution.alternatives
-      ? shops.filter(shop => solution.alternatives.includes(shop.id))
-      : [];
-  };
-
-  const alternatives = getAlternatives(solutions, id);
 
   const toggleCommentsView = () => {
     setShowAllComments(prevState => !prevState);
@@ -69,20 +57,20 @@ function SolutionsDetailsCard({ solution, main }) {
 
 
   const providerComment = comments.find(comment =>
-    comment.owner === provider
+    comment.owner === user_id
   );
 
   const otherComments = comments.filter(
-    comment => comment.owner != provider
+    comment => comment.owner != user_id
   );
 
   return (
     <div className="card mx-3" style={{ minHeight: '85vh' }}>
       <div className="card-body">
       <div className="d-flex justify-content-between align-items-center">
-  <h5 className="card-title mb-0">{name}</h5>
+  <h5 className="card-title mb-0">{business_name}</h5>
 
-  {shop.provider === currentUser ? (
+  {user_id === currentUser ? (
     // Render the Edit button only if the current user is the solution provider
     <>
       <button
@@ -94,13 +82,13 @@ function SolutionsDetailsCard({ solution, main }) {
       <SolutionForm
         show={showSolutionModal}
         onClose={() => setShowSolutionModal(false)}
-        shopName={name}
+        shopName={business_name}
         shopCatalogue={catalogue}
-        shopContacts={contacts}
+        shopContacts={phone_number}
         address={location}
         shopEmail={email}
         shopDetails={providerComment.comment}
-        id={id}
+        id={_id}
         currentUser={currentUser}
         fullSoln={solution}
       />
@@ -108,20 +96,27 @@ function SolutionsDetailsCard({ solution, main }) {
   ) : (
     // Render the Flag button for other users
     <>
-      <button
-        className="btn"
-        style={{
-          backgroundColor: shop.red_flags.includes(currentUser) ? 'red' : 'blue',
-          color: 'white',
-        }}
-        onClick={() => setShowModal(true)}
+    <div className="d-flex align-items-center">
+      <FontAwesomeIcon
+        icon={faHandshake}
+        className="fa-fw me-3"
+        style={{ fontSize: '25px', color: isToggled ? 'blue' : 'black' }}
+      />
+      <span
+        className="mx-2 text-muted"
+        role="img"
+        aria-label="flag"
+        style={{ fontSize: '25px', color: flags.includes(currentUser) ? 'red' : 'red' }}
       >
-        {shop.red_flags.includes(currentUser) ? 'Flagged' : 'Flag it'}
-      </button>
+        &#9873;
+      </span>
+
+    </div>
+      
       <ReviewModal
         show={showModal}
         onClose={() => setShowModal(false)}
-        shop={shop}
+        shop={solution}
         currentUser={currentUser}
       />
     </>
@@ -140,18 +135,13 @@ function SolutionsDetailsCard({ solution, main }) {
         {!showAllComments ? (
           <div className="full-data">
             <p className="card-text">
-              <strong>Red Flags:</strong> {red_flags.length}
-              <span
-                className="me-2 text-muted"
-                role="img"
-                aria-label="flag"
-                style={{ fontSize: '1rem', color: 'red' }}
-              >
-                &#9873;
-              </span>
+              <strong>Red Flags:</strong> {flags.length}
             </p>
             <p className="card-text">
-              <strong>Endorsements:</strong> {endorsers.join(', ')}
+              <strong>Endorsements:</strong> {endorsements.join(', ')}
+            </p>
+            <p className="card-text">
+              <strong>Handshakes:</strong> {handshakes.length}
             </p>
             <p className="card-text">
               <strong>Locations:</strong> {Array.isArray(location) ? location.join(', ') : location}
@@ -169,7 +159,7 @@ function SolutionsDetailsCard({ solution, main }) {
             ) : (
               <>
                 <p className="card-text">
-                  <strong>Contacts:</strong> {contacts}
+                  <strong>Contacts:</strong> {phone_number}
                 </p>
                 <p className="card-text">
                   <strong>Email:</strong> {email}
@@ -178,16 +168,19 @@ function SolutionsDetailsCard({ solution, main }) {
             )}
             
             <p className="card-text">
-              <strong>Comments:</strong>
+              <strong>Details:</strong>
             </p>
-            {providerComment && (
-              <CommentsCard solutionId={id} {...providerComment} />
-            )}
-            <p
+            <div className="details mb-3 p-2 d-block bg-dark text-light overflow-auto" style={{maxHeight: '35vh'  }}>
+                    {details}
+            </div>
+            <p className="card-text">
+              <strong>Comments:</strong>
+              <span 
+              className='ms-2'
               onClick={toggleCommentsView}
-              style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-            >
-              See All...
+              style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
+                {comments.length}
+              </span>
             </p>
           </div>
         ) : (

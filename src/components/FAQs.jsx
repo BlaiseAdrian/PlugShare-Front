@@ -14,11 +14,11 @@ const faqs = [
   },  
   {
     question: "What is the Personal List?",
-    answer: "This is where you add your specific needs/requirements under a specific subcategory. When others are sharing their Plugs, they'll read through them so that thhey share the places with the stuff you actually want, the way you want them. You can add needs directly in your personal list page, or by upvoting a need in the Community list, which you can then edit and add  to your list. As of now, every member is limited to a maximum of three personal needs. An example of a pesronal requirement/need under the 'Affordable Daycare Services' subcategory is 'I want a place with a van to pick up and return the children.'."
+    answer: "This is where you add your specific needs/requirements under a specific subcategory. When others are sharing their Plugs, they'll read through them so that they share the places with the stuff you actually want, the way you want them. You can add needs directly in your personal list page, or by upvoting a need in the Community list, which you can then edit and add  to your list. As of now, every member is limited to a maximum of three personal needs. An example of a pesronal requirement/need under the 'Affordable Daycare Services' subcategory is 'I want a place with a van to pick up and return the children.'."
     }, 
   {
     question: "What are Community Needs?",
-    answer: "All personal needs/requirements appear here, arranged under their respective subcategories. Members can see the requirements and then share their Plugs that meet most (Not necessarily all) of the requirements in a subcategory. You can share your Plug even if it doesn't meet any requirements, but you risk getting no appreciation, or even negative reviews."
+    answer: "All personal needs/requirements appear here, arranged under their respective subcategories. Members can see the requirements and then share their Plugs that meet most (Not necessarily all) of a person's requirements. You can share your Plug even if it doesn't meet any requirements, but you risk getting no appreciation, or even negative reviews."
   },   
   {
     question: "Why Share Plugs?",

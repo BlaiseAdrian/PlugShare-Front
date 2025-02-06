@@ -7,17 +7,24 @@ import PersonalNeedsCard from './PersonalNeedsCard';
 import SolutionFeedbackForm from './SolutionFeedbackForm';
 import { useUser } from '../hooks/useUser';
 import { useDashboard } from '../hooks/useDashboard';
+import NeedsDetailsCard from './NeedsDetailsCard';
 
 function PersonalList() {
-  const { data} = useContext(DataContext);
   
-  const items = data.filter((need) => need.owner.includes("Current User"));
   const [showModal, setShowModal] =useState(false);
   const [showFeedbackModal, setShowFeedbackModal] =useState(false);
-  const n = items.length;
   const {setUser} = useUser()
   const { dashboard, setDashboard } = useDashboard()
   const {_id} = dashboard.profile;
+  const allNeeds = [];
+  dashboard.needs.top_needs.forEach(element => {
+    element.needs.forEach(need => {
+      allNeeds.push(need);
+    });
+  });
+  const items = allNeeds.filter((need) => need["poster's_id"] == _id);
+  
+  const n = items.length;
 
   function signout(){
     setUser(null)
@@ -45,7 +52,7 @@ function PersonalList() {
             <h2 className="mb-3 mx-3">{n}/3</h2>
           </div>
             {items.map((item, index) => (
-                <PersonalNeedsCard key={index} {...item} />
+                <NeedsDetailsCard need={item} />
             ))}
         </div>
     </div>

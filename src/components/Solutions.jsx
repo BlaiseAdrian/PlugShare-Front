@@ -4,37 +4,21 @@ import Filter from './Filter';
 import SolutionCard from './SolutionCard';
 import { useLocation } from 'react-router-dom';
 import { DataContext } from './DataContext';
+import { useDashboard } from '../hooks/useDashboard';
+import { DashboardContext } from '../contexts/DashboardContext';
 
 function Solutions() {
-
     const { state } = useLocation();
-    const { solutions, currentSoln, updateCurrentSub, currentSub} = useContext(DataContext);
-
-    if(state) {
-        updateCurrentSub(state.sub_category);
-    }    
-    const title = state? state.sub_category : currentSub;
-
-    // Sort and group the solutions
-const groupAndSortShops = (solutions) => {
-    // Group by need
-    const shops = solutions.filter((solution) => solution.subcategory === currentSub);
-  
-    // Sort within each group by rating in descending order
-    const sortedShops = shops.sort((a, b) => a.rating - b.rating);
-  
-    return sortedShops;
-  };
-
-  const business = groupAndSortShops(solutions);
-
-    const [items, setItems] = useState(business);
-
+    const { dashboard, setDashboard } = useDashboard();
+    const { updateCurrentNeed, currentNeed} = useContext(DashboardContext);
     
-  useEffect(() => {
-    const business = groupAndSortShops(solutions);
-    setItems(business);
-  }, [solutions, currentSoln]); // Recompute shop whenever data changes
+    if(state) {
+      updateCurrentNeed(state);
+  } 
+
+    const shops = dashboard.solutions.all_solutions.filter((solution) => solution.need_id === currentNeed);
+    //console.log(state)
+    const [items, setItems] = useState(shops);
   
     const sortOptions = [
       { label: 'Endosements', value: 'endosements' },
@@ -47,14 +31,12 @@ const groupAndSortShops = (solutions) => {
 
     return (
         <div>
-            <h4 className='ms-3 mb-4'>{title} Plugs:</h4>
+            <h4 className='ms-3 mb-4'>Shared Plugs:</h4>
             <div className="d-flex justify-content-between align-items-center mb-3">
             </div>
             <div className='overflow-auto' style={{ maxHeight: "75vh" }}>
                 {items.map((shop) => (
-                    shop.subcategory === title && (
-                        <SolutionCard link="/SolutionsDetails" key={shop.id} shop={shop}/>
-                    )
+                  <SolutionCard link="/SolutionsDetails" key={shop.need_id} shop={shop}/>
                 ))}
             </div>
         </div>

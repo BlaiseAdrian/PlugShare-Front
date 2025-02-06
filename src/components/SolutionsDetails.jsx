@@ -21,13 +21,13 @@ function SolutionDetails() {
             <EndorseModal
                 show={showEndorseModal}
                 onClose={() => setShowEndorseModal(false)}
-                shopName="Sula's Shop"
+                shopName= {state.business_name}
             />
             <button className="btn btn-primary mb-3 me-3" disabled={state} onClick={() => setShowAlternativesModal(true)}>Suggest Alternative</button>
             <AlternativesModal
                 show={showAlternativesModal}
                 onClose={() => setShowAlternativesModal(false)}
-                shopName="Sula's Shop"
+                shopName= {state.business_name}
             />
         </div>
             <div>
